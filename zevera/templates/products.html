@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rings — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Announcement */
+    .announcement {
+      background: var(--ink); color: var(--cream); text-align: center;
+      padding: 0.6rem 1rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .announcement span { color: var(--gold); }
+
+    /* Header */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); }
+    .logo span { color: var(--gold); }
+    .nav-desktop { display: none; }
+    .nav-desktop ul { display: flex; gap: 2rem; }
+    .nav-desktop a { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; transition: color var(--transition); position: relative; }
+    .nav-desktop a:hover { color: var(--gold); }
+    .nav-desktop .active { color: var(--gold-dark); }
+    .nav-desktop .active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -0.4rem; height: 1px; background: var(--gold); }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 0.35rem; color: var(--ink); transition: color var(--transition); }
+    .icon-btn:hover { color: var(--gold); }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .cart-count {
+      position: absolute; top: -4px; right: -4px; background: var(--gold); color: var(--white);
+      font-size: 0.65rem; font-weight: 600; width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cart-wrap { position: relative; }
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 0.35rem; }
+    .menu-toggle span { width: 22px; height: 2px; background: var(--ink); transition: var(--transition); }
+    #nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+    .nav-mobile { max-height: 0; overflow: hidden; background: var(--white); border-top: 1px solid transparent; transition: max-height 0.35s ease, border-color 0.35s ease; }
+    #nav-toggle:checked ~ .nav-mobile { max-height: 400px; border-top-color: var(--border); padding: 1rem 0; }
+    .nav-mobile ul { display: flex; flex-direction: column; gap: 0.75rem; }
+    .nav-mobile a { display: block; padding: 0.5rem 0; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+    .nav-mobile .active { color: var(--gold-dark); }
+
+    /* Rings hero */
+    .rings-hero {
+      position: relative; min-height: 58vh; display: flex; align-items: center;
+      background: linear-gradient(135deg, #2c2420 0%, #1a1614 50%, #0f0d0c 100%);
+      overflow: hidden;
+    }
+    .rings-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 75% 35%, rgba(201, 169, 98, 0.16) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 15% 85%, rgba(183, 110, 121, 0.09) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .rings-hero-grid {
+      display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center;
+      position: relative; z-index: 1; padding: 3rem 0;
+    }
+    .rings-hero-content { text-align: center; color: var(--cream); }
+    .hero-tag {
+      display: inline-block; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem; border: 1px solid rgba(201, 169, 98, 0.4); padding: 0.4rem 1rem;
+    }
+    .rings-hero h1 {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 400; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .rings-hero h1 em { font-style: italic; color: var(--gold); }
+    .rings-hero p {
+      font-size: 0.95rem; font-weight: 300; color: rgba(250, 248, 245, 0.85);
+      max-width: 420px; margin: 0 auto 1.75rem; line-height: 1.7;
+    }
+    .rings-hero-visual { display: flex; justify-content: center; align-items: center; }
+    .hero-ring {
+      width: min(220px, 60vw); aspect-ratio: 1; border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.25) 0%, transparent 40%),
+        linear-gradient(145deg, #d4af6a 0%, #c9a962 30%, #8b7340 70%, #c9a962 100%);
+      box-shadow: 0 0 0 10px rgba(201, 169, 98, 0.15), 0 0 0 20px rgba(201, 169, 98, 0.06), var(--shadow-lg);
+      position: relative; animation: float 6s ease-in-out infinite;
+    }
+    .hero-ring::after {
+      content: ''; position: absolute; inset: 18%; border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: inset 0 0 30px rgba(0,0,0,0.2);
+    }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    /* Filter bar */
+    .filter-bar { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 61px; z-index: 90; }
+    .filter-inner { display: flex; gap: 1.25rem; overflow-x: auto; padding: 1rem 0; scrollbar-width: none; }
+    .filter-inner::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex: none; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-soft); background: var(--cream); border: 1px solid var(--border); border-radius: 999px;
+      padding: 0.5rem 1.1rem; cursor: pointer; transition: all var(--transition); white-space: nowrap;
+    }
+    .filter-chip:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .filter-chip.is-active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+    /* Section common */
+    section { padding: 3rem 0; }
+    .section-header { text-align: center; margin-bottom: 2rem; }
+    .section-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.65rem, 4vw, 2.25rem); font-weight: 600; color: var(--ink); }
+    .section-sub { font-size: 0.85rem; color: var(--ink-soft); max-width: 460px; margin: 0.5rem auto 0; }
+
+    /* Signature: Find Your Fit ring-size scale */
+    .size-finder { background: var(--white); border-bottom: 1px solid var(--border); }
+    .size-scale {
+      display: flex; align-items: flex-end; gap: 1.1rem; overflow-x: auto;
+      padding: 1rem 0.25rem 0.5rem; scrollbar-width: none;
+    }
+    .size-scale::-webkit-scrollbar { display: none; }
+    .size-dot-wrap {
+      flex: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      cursor: pointer; background: none; border: none;
+    }
+    .size-dot {
+      border-radius: 50%; border: 2px solid var(--border); transition: all var(--transition);
+      background: var(--cream);
+    }
+    .size-dot-wrap:hover .size-dot, .size-dot-wrap.is-active .size-dot {
+      border-color: var(--gold); background: rgba(201,169,98,0.1);
+    }
+    .size-us { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; color: var(--ink); }
+    .size-mm { font-size: 0.6rem; color: var(--ink-soft); }
+    .size-finder-foot {
+      text-align: center; font-size: 0.75rem; color: var(--ink-soft); margin-top: 0.75rem;
+    }
+    .size-finder-foot a { color: var(--gold-dark); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Product grid */
+    .rings-grid { background: var(--cream); }
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    .product-card {
+      background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition); display: flex; flex-direction: column;
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .product-image { aspect-ratio: 1; position: relative; overflow: hidden; }
+    .product-image-bg {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 2.6rem; transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-image-bg { transform: scale(1.08); }
+    .p1 { background: linear-gradient(145deg, #faf8f5, #e8dcc8); }
+    .p2 { background: linear-gradient(145deg, #f5eef0, #e8c4cc); }
+    .p3 { background: linear-gradient(145deg, #f0ebe3, #d4c4a8); }
+    .p4 { background: linear-gradient(145deg, #ebe8e4, #c9b896); }
+    .p5 { background: linear-gradient(145deg, #f2ece0, #cbb896); }
+    .p6 { background: linear-gradient(145deg, #efe6e8, #d9a9b2); }
+    .p7 { background: linear-gradient(145deg, #eae6e0, #b9ae9c); }
+    .p8 { background: linear-gradient(145deg, #f6f1e9, #dcc79a); }
+    .product-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem; background: var(--ink); color: var(--white);
+      font-size: 0.58rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.6rem;
+    }
+    .product-badge.new { background: var(--rose); }
+    .product-wishlist {
+      position: absolute; top: 0.75rem; right: 0.75rem; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--white); border: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; opacity: 0; transition: opacity var(--transition);
+    }
+    .product-card:hover .product-wishlist { opacity: 1; }
+    .product-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+    .product-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .product-info .material { font-size: 0.68rem; color: var(--ink-soft); letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .product-sizes { font-size: 0.62rem; letter-spacing: 0.04em; color: var(--gold-dark); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .product-price { font-size: 0.88rem; font-weight: 600; color: var(--gold-dark); margin-top: auto; }
+    .product-price del { font-weight: 400; color: var(--ink-soft); font-size: 0.78rem; margin-left: 0.5rem; }
+    .load-more-wrap { text-align: center; margin-top: 2.5rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; padding: 0.85rem 2rem;
+      font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition);
+    }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .btn-outline-light { background: transparent; color: var(--cream); border: 1px solid rgba(250,248,245,0.5); }
+    .btn-outline-light:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Sizing guide */
+    .sizing-guide { background: var(--white); }
+    .guide-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+    .guide-step {
+      background: var(--cream); padding: 1.5rem; border-radius: var(--radius); position: relative;
+    }
+    .guide-step .num {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; color: var(--gold);
+      margin-bottom: 0.5rem; display: block;
+    }
+    .guide-step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .guide-step p { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.6; }
+
+    /* Bespoke banner */
+    .bespoke-banner {
+      background: var(--ink); color: var(--cream); padding: 3.5rem 0; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .bespoke-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(201, 169, 98, 0.12) 0%, transparent 70%);
+    }
+    .bespoke-inner { position: relative; max-width: 480px; margin: 0 auto; }
+    .bespoke-banner h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 400; margin-bottom: 0.75rem; }
+    .bespoke-banner p { font-size: 0.85rem; font-weight: 300; opacity: 0.85; margin-bottom: 1.75rem; }
+    .bespoke-btns { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+    /* Footer */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 3rem 0 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+    .footer-brand .logo { color: var(--cream); margin-bottom: 0.75rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; opacity: 0.75; }
+    .footer-col h4 { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col a { font-size: 0.8rem; opacity: 0.75; transition: opacity var(--transition); }
+    .footer-col a:hover { opacity: 1; color: var(--gold); }
+    .footer-bottom {
+      border-top: 1px solid rgba(250, 248, 245, 0.1); padding-top: 1.5rem; display: flex; flex-direction: column;
+      gap: 0.75rem; align-items: center; text-align: center;
+    }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+      .guide-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+    }
+
+    /* Desktop */
+    @media (min-width: 768px) {
+      .menu-toggle { display: none; }
+      .nav-desktop { display: block; }
+      .nav-mobile { display: none !important; }
+      .rings-hero-grid { grid-template-columns: 1.2fr 0.8fr; gap: 3rem; padding: 4rem 0; text-align: left; }
+      .rings-hero-content { text-align: left; }
+      .rings-hero p { margin: 0 0 1.75rem; }
+      .product-grid { grid-template-columns: repeat(4, 1fr); }
+      .guide-grid { grid-template-columns: repeat(4, 1fr); }
+      section { padding: 4.5rem 0; }
+      .rings-hero { min-height: 64vh; }
+      .hero-ring { width: 260px; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <div class="announcement">Free insured shipping over ₹15,000 · <span>Lifetime resizing on every ring</span></div>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">Maison <span>Aurée</span></a>
+      <nav class="nav-desktop">
+        <ul>
+          <li><a href="/products/1" class="active">Rings</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <!-- <li><a href="#">New Arrivals</a></li> -->
+          <li><a href="/products/4">Bespoke</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        </button>
+        <div class="cart-wrap">
+          <button class="icon-btn" aria-label="Cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+          </button>
+          <span class="cart-count">2</span>
+        </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+        <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+    <div class="nav-mobile">
+      <div class="container">
+        <ul>
+          <li><a href="/products/1" class="active">Rings</a></li>
+          <li><a href="#">Necklaces</a></li>
+          <li><a href="#">Earrings</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Bespoke</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="rings-hero">
+    <div class="container rings-hero-grid">
+      <div class="rings-hero-content">
+        <span class="hero-tag"> {{category.name}} </span>
+        <!-- <h1>Rings built to <em>fit</em>, not just to shine</h1> -->
+         <h1> {{ extra.headline }}</h1>
+        <p>{{extra.headline_desc}}</p>
+      </div>
+      <div class="rings-hero-visual">
+        <div class="hero-ring" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="container filter-inner">
+      <button class="filter-chip is-active">All Rings</button>
+      <button class="filter-chip">Signet</button>
+      <button class="filter-chip">Solitaire</button>
+      <button class="filter-chip">Stackable</button>
+      <button class="filter-chip">Wedding Bands</button>
+      <button class="filter-chip">18k Gold</button>
+      <button class="filter-chip">Silver</button>
+    </div>
+  </div>
+
+  <!-- Signature: Find Your Fit size scale -->
+  <div class="size-finder">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 0.5rem;">
+        <p class="section-label">Find Your Fit</p>
+        <h2 class="section-title">Shop By Size</h2>
+      </div>
+      <div class="size-scale">
+        <button class="size-dot-wrap"><div class="size-dot" style="width:22px;height:22px;"></div><span class="size-us">US 4</span><span class="size-mm">14.9mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:25px;height:25px;"></div><span class="size-us">US 5</span><span class="size-mm">15.7mm</span></button>
+        <button class="size-dot-wrap is-active"><div class="size-dot" style="width:28px;height:28px;"></div><span class="size-us">US 6</span><span class="size-mm">16.5mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:31px;height:31px;"></div><span class="size-us">US 7</span><span class="size-mm">17.3mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:34px;height:34px;"></div><span class="size-us">US 8</span><span class="size-mm">18.1mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:37px;height:37px;"></div><span class="size-us">US 9</span><span class="size-mm">18.9mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:40px;height:40px;"></div><span class="size-us">US 10</span><span class="size-mm">19.8mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:43px;height:43px;"></div><span class="size-us">US 11</span><span class="size-mm">20.6mm</span></button>
+        <button class="size-dot-wrap"><div class="size-dot" style="width:46px;height:46px;"></div><span class="size-us">US 12</span><span class="size-mm">21.4mm</span></button>
+      </div>
+      <p class="size-finder-foot">Not sure of your size? <a href="#sizing-guide">Measure at home in 2 minutes ↓</a></p>
+    </div>
+  </div>
+
+  <!-- Product grid -->
+  <section class="rings-grid">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">42 Styles</p>
+        <h2 class="section-title">All {{category.name}}</h2>
+      </div>
+
+      
+      <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p1"><img src="{{ product.image.url }}"></div>
+            <!-- <span class="product-badge">Bestseller</span> -->
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>{{product.name}}</h3>
+            <p class="material">{{ product.prod_desc }}</p>
+            <!-- <p class="product-sizes">Sizes 4–10</p> -->
+            <p class="product-price">₹{{ product.price }}</p>
+          </div>
+        </article>
+      {% endfor %}
+        <!-- <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p2">💍</div>
+            <span class="product-badge new">New</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Ora Signet</h3>
+            <p class="material">18K Gold, Brushed Finish</p>
+            <p class="product-sizes">Sizes 5–12</p>
+            <p class="product-price">₹42,500</p>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p3">💍</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Thistle Band</h3>
+            <p class="material">Sterling Silver</p>
+            <p class="product-sizes">Sizes 4–11</p>
+            <p class="product-price">₹11,600</p>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p4">💍</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Halo Solitaire</h3>
+            <p class="material">Platinum · 0.8ct Center Stone</p>
+            <p class="product-sizes">Sizes 5–9</p>
+            <p class="product-price">₹1,84,000 <del>₹2,10,000</del></p>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p5">💍</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Dune Stacking Ring</h3>
+            <p class="material">14K Rose Gold</p>
+            <p class="product-sizes">Sizes 4–10</p>
+            <p class="product-price">₹19,800</p>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p6">💍</div>
+            <span class="product-badge new">New</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Garnet Bezel Ring</h3>
+            <p class="material">14K Gold, Bezel-Set Garnet</p>
+            <p class="product-sizes">Sizes 5–9</p>
+            <p class="product-price">₹28,400</p>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p7">💍</div>
+            <span class="product-badge">Bestseller</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Eternity Wedding Band</h3>
+            <p class="material">18K White Gold, Pavé Set</p>
+            <p class="product-sizes">Sizes 4–12</p>
+            <p class="product-price">₹95,000</p>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p8">💍</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+          </div>
+          <div class="product-info">
+            <h3>Marrow Twist Ring</h3>
+            <p class="material">Sterling Silver, Hammered</p>
+            <p class="product-sizes">Sizes 5–11</p>
+            <p class="product-price">₹9,800</p>
+          </div>
+        </article>
+      </div> -->
+
+      <!-- <div class="load-more-wrap">
+        <button class="btn btn-outline">Load More Rings</button>
+      </div>
+    </div> -->
+  </section>
+
+  <!-- Sizing guide -->
+  <section class="sizing-guide" id="sizing-guide">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Get It Right The First Time</p>
+        <h2 class="section-title">Measure Your Size At Home</h2>
+        <p class="section-sub">No ring sizer? Use a strip of paper and a ruler — takes about two minutes.</p>
+      </div>
+      <div class="guide-grid">
+        <div class="guide-step">
+          <span class="num">01</span>
+          <h4>Wrap a strip</h4>
+          <p>Cut a thin strip of paper and wrap it snugly around the base of your finger.</p>
+        </div>
+        <div class="guide-step">
+          <span class="num">02</span>
+          <h4>Mark the overlap</h4>
+          <p>Mark where the strip meets itself, then lay it flat against a ruler.</p>
+        </div>
+        <div class="guide-step">
+          <span class="num">03</span>
+          <h4>Measure in mm</h4>
+          <p>That length is your finger's circumference — match it against our size scale above.</p>
+        </div>
+        <div class="guide-step">
+          <span class="num">04</span>
+          <h4>Still unsure? We resize free</h4>
+          <p>Every ring includes one free resize within 60 days of delivery — no receipt needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bespoke banner -->
+  <section class="bespoke-banner">
+    <div class="container bespoke-inner">
+      <p class="section-label" style="color: var(--gold);">Made To Order</p>
+      <h2>Design a ring that doesn't exist yet</h2>
+      <p>Sit with our jewelers, choose your stone and setting, and we'll hand-finish it in three weeks.</p>
+      <div class="bespoke-btns">
+        <a href="#" class="btn btn-primary">Book A Consultation</a>
+        <a href="#" class="btn btn-outline-light">See Bespoke Work</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">Maison <span>Aurée</span></div>
+          <p>Small-batch fine jewelry, fitted to you before it ever leaves the workshop.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="#">Rings</a></li>
+            <li><a href="#">Necklaces</a></li>
+            <li><a href="#">Earrings</a></li>
+            <li><a href="#">New Arrivals</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Care</h4>
+          <ul>
+            <li><a href="#">Sizing Guide</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Cleaning & Repair</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <ul>
+            <li><a href="#">Our Workshop</a></li>
+            <li><a href="#">Bespoke Orders</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Maison Aurée. All rights reserved.</p>
+        <p>Insured shipping · Lifetime resizing</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
