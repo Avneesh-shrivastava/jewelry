@@ -25,4 +25,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('new-arrivals/', new_arrivals, name="new_arrivals"),
     path('home-page/', home_page, name="home_page"),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('products/<int:id>/', products, name="products"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
