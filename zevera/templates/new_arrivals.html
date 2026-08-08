@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Arrivals — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Announcement bar */
+    .announcement {
+      background: var(--ink);
+      color: var(--cream);
+      text-align: center;
+      padding: 0.6rem 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .announcement span { color: var(--gold); }
+
+    /* Header */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); }
+    .logo span { color: var(--gold); }
+    .nav-desktop { display: none; }
+    .nav-desktop ul { display: flex; gap: 2rem; }
+    .nav-desktop a { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; transition: color var(--transition); position: relative; }
+    .nav-desktop a:hover { color: var(--gold); }
+    .nav-desktop .active { color: var(--gold-dark); }
+    .nav-desktop .active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -0.4rem; height: 1px; background: var(--gold);
+    }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 0.35rem; color: var(--ink); transition: color var(--transition); }
+    .icon-btn:hover { color: var(--gold); }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .cart-count {
+      position: absolute; top: -4px; right: -4px; background: var(--gold); color: var(--white);
+      font-size: 0.65rem; font-weight: 600; width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cart-wrap { position: relative; }
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 0.35rem; }
+    .menu-toggle span { width: 22px; height: 2px; background: var(--ink); transition: var(--transition); }
+    #nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+    .nav-mobile { max-height: 0; overflow: hidden; background: var(--white); border-top: 1px solid transparent; transition: max-height 0.35s ease, border-color 0.35s ease; }
+    #nav-toggle:checked ~ .nav-mobile { max-height: 400px; border-top-color: var(--border); padding: 1rem 0; }
+    .nav-mobile ul { display: flex; flex-direction: column; gap: 0.75rem; }
+    .nav-mobile a { display: block; padding: 0.5rem 0; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+    .nav-mobile .active { color: var(--gold-dark); }
+
+    /* Page intro / hero */
+    .arrivals-hero {
+      position: relative;
+      min-height: 56vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #2c2420 0%, #1a1614 50%, #0f0d0c 100%);
+      overflow: hidden;
+    }
+    .arrivals-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 75% 30%, rgba(201, 169, 98, 0.16) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 15% 90%, rgba(183, 110, 121, 0.09) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .arrivals-hero-inner { position: relative; z-index: 1; padding: 3.5rem 0; color: var(--cream); text-align: center; }
+    .hero-tag {
+      display: inline-block; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem; border: 1px solid rgba(201, 169, 98, 0.4); padding: 0.4rem 1rem;
+    }
+    .arrivals-hero h1 {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 400; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .arrivals-hero h1 em { font-style: italic; color: var(--gold); }
+    .arrivals-hero p {
+      font-size: 0.95rem; font-weight: 300; color: rgba(250, 248, 245, 0.85);
+      max-width: 460px; margin: 0 auto 1.75rem; line-height: 1.7;
+    }
+    .drop-meta {
+      display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.5rem;
+      font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(250,248,245,0.65);
+    }
+    .drop-meta strong { color: var(--gold); font-weight: 600; }
+
+    /* Filter / sort bar */
+    .filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 61px;
+      z-index: 90;
+    }
+    .filter-inner {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      padding: 1rem 0;
+      scrollbar-width: none;
+    }
+    .filter-inner::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.5rem 1.1rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .filter-chip:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .filter-chip.is-active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+    /* Section common */
+    section { padding: 3rem 0; }
+    .section-header { text-align: center; margin-bottom: 2rem; }
+    .section-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.65rem, 4vw, 2.25rem); font-weight: 600; color: var(--ink); }
+
+    /* Ledger strip — signature element: a running "arrivals log" like a boutique intake ledger */
+    .ledger {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 1.75rem 0;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(201,169,98,0.25);
+    }
+    .ledger-track {
+      display: flex;
+      gap: 2.5rem;
+      white-space: nowrap;
+      animation: scroll-ledger 32s linear infinite;
+      width: max-content;
+    }
+    .ledger-track:hover { animation-play-state: paused; }
+    @media (prefers-reduced-motion: reduce) {
+      .ledger-track { animation: none; }
+    }
+    .ledger-entry {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+    }
+    .ledger-entry .lot { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 600; }
+    .ledger-entry .stamp { color: rgba(250,248,245,0.5); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.62rem; }
+    .ledger-entry .name { color: rgba(250,248,245,0.85); }
+    .ledger-divider { color: rgba(201,169,98,0.35); }
+
+    /* Product grid */
+    .arrivals-grid { background: var(--cream); }
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+    .product-image { aspect-ratio: 1; position: relative; overflow: hidden; }
+    .product-image-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; transition: transform 0.5s ease; }
+    .product-card:hover .product-image-bg { transform: scale(1.08); }
+
+    .p1 { background: linear-gradient(145deg, #faf8f5, #e8dcc8); }
+    .p2 { background: linear-gradient(145deg, #f5eef0, #e8c4cc); }
+    .p3 { background: linear-gradient(145deg, #f0ebe3, #d4c4a8); }
+    .p4 { background: linear-gradient(145deg, #ebe8e4, #c9b896); }
+    .p5 { background: linear-gradient(145deg, #f2ece0, #cbb896); }
+    .p6 { background: linear-gradient(145deg, #efe6e8, #d9a9b2); }
+    .p7 { background: linear-gradient(145deg, #eae6e0, #b9ae9c); }
+    .p8 { background: linear-gradient(145deg, #f6f1e9, #dcc79a); }
+
+    .product-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem; background: var(--ink); color: var(--white);
+      font-size: 0.58rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.6rem;
+    }
+    .product-badge.new { background: var(--rose); }
+
+    .arrival-stamp {
+      position: absolute; bottom: 0.75rem; left: 0.75rem;
+      font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--cream); background: rgba(26,26,26,0.55); backdrop-filter: blur(2px);
+      padding: 0.28rem 0.55rem; border-radius: 2px;
+    }
+
+    .product-wishlist {
+      position: absolute; top: 0.75rem; right: 0.75rem; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--white); border: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; opacity: 0; transition: opacity var(--transition);
+    }
+    .product-card:hover .product-wishlist { opacity: 1; }
+
+    .product-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+    .product-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .product-info .material { font-size: 0.68rem; color: var(--ink-soft); letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+    .product-price { font-size: 0.88rem; font-weight: 600; color: var(--gold-dark); margin-top: auto; }
+    .product-price del { font-weight: 400; color: var(--ink-soft); font-size: 0.78rem; margin-left: 0.5rem; }
+
+    .load-more-wrap { text-align: center; margin-top: 2.5rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; padding: 0.85rem 2rem;
+      font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition);
+    }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+    /* Notify / next drop */
+    .next-drop { background: var(--ink); color: var(--cream); padding: 3.5rem 0; text-align: center; position: relative; overflow: hidden; }
+    .next-drop::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(201, 169, 98, 0.12) 0%, transparent 70%);
+    }
+    .next-drop-inner { position: relative; max-width: 480px; margin: 0 auto; }
+    .next-drop h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 400; margin-bottom: 0.75rem; }
+    .next-drop p { font-size: 0.85rem; font-weight: 300; opacity: 0.85; margin-bottom: 1.75rem; }
+    .countdown { display: flex; justify-content: center; gap: 1.25rem; margin-bottom: 2rem; }
+    .countdown-unit { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+    .countdown-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold); font-weight: 600; line-height: 1; }
+    .countdown-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+    .notify-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .notify-form input {
+      padding: 0.9rem 1.25rem; border: 1px solid rgba(250,248,245,0.25); background: rgba(250,248,245,0.06);
+      color: var(--cream); font-family: inherit; font-size: 0.85rem; border-radius: var(--radius); outline: none;
+      transition: border-color var(--transition);
+    }
+    .notify-form input::placeholder { color: rgba(250,248,245,0.45); }
+    .notify-form input:focus { border-color: var(--gold); }
+    .notify-form .btn { width: 100%; }
+
+    /* Footer */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 3rem 0 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+    .footer-brand .logo { color: var(--cream); margin-bottom: 0.75rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; opacity: 0.75; }
+    .footer-col h4 { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col a { font-size: 0.8rem; opacity: 0.75; transition: opacity var(--transition); }
+    .footer-col a:hover { opacity: 1; color: var(--gold); }
+    .footer-bottom {
+      border-top: 1px solid rgba(250, 248, 245, 0.1); padding-top: 1.5rem; display: flex; flex-direction: column;
+      gap: 0.75rem; align-items: center; text-align: center;
+    }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+      .countdown-num { font-size: 2.4rem; }
+    }
+
+    /* Desktop */
+    @media (min-width: 768px) {
+      .menu-toggle { display: none; }
+      .nav-desktop { display: block; }
+      .nav-mobile { display: none !important; }
+      .product-grid { grid-template-columns: repeat(4, 1fr); }
+      section { padding: 4.5rem 0; }
+      .arrivals-hero { min-height: 62vh; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <!-- Announcement -->
+  <div class="announcement">Free insured shipping over ₹15,000 · <span>New lots added every Friday</span></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/home-page" class="logo">Zevera <span>Jewellers</span></a>
+
+      <nav class="nav-desktop">
+        <ul>
+          <li><a href="#">Rings</a></li>
+          <li><a href="#">Necklaces</a></li>
+          <li><a href="#">Earrings</a></li>
+          <li><a href="#" class="active">New Arrivals</a></li>
+          <li><a href="#">Bespoke</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        </button>
+        <div class="cart-wrap">
+          <button class="icon-btn" aria-label="Cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+          </button>
+          <span class="cart-count">2</span>
+        </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+        <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+    <div class="nav-mobile">
+      <div class="container">
+        <ul>
+          <li><a href="#">Rings</a></li>
+          <li><a href="#">Necklaces</a></li>
+          <li><a href="#">Earrings</a></li>
+          <li><a href="#" class="active">New Arrivals</a></li>
+          <li><a href="#">Bespoke</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="arrivals-hero">
+    <div class="container arrivals-hero-inner">
+      <span class="hero-tag">Fresh From The Bench</span>
+      <h1>The <em>latest</em> lot,<br>just catalogued</h1>
+      <p>Twenty-two pieces logged into inventory this week — each one photographed, weighed, and priced the day it left the workshop.</p>
+      <div class="drop-meta">
+        <span>Lot <strong>№ 0114</strong></span>
+        <span>Logged <strong>31 Jul, 9:04 AM</strong></span>
+        <span><strong>22</strong> pieces this drop</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Arrivals ledger — signature element -->
+  <div class="ledger" role="marquee" aria-label="Recently logged arrivals">
+    <div class="ledger-track">
+      <span class="ledger-entry"><span class="lot">0114–01</span><span class="name">Ora Signet, 18k</span><span class="stamp">In · 9:04a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0114–02</span><span class="name">Vellum Hoops</span><span class="stamp">In · 9:04a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0114–03</span><span class="name">Marrow Chain</span><span class="stamp">In · 9:05a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0114–04</span><span class="name">Dune Cuff</span><span class="stamp">In · 9:07a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0113–19</span><span class="name">Bisque Studs</span><span class="stamp">In · Yesterday</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0113–20</span><span class="name">Alder Pendant</span><span class="stamp">In · Yesterday</span></span>
+      <span class="ledger-divider">/</span>
+      <!-- duplicate set for seamless loop -->
+      <span class="ledger-entry"><span class="lot">0114–01</span><span class="name">Ora Signet, 18k</span><span class="stamp">In · 9:04a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0114–02</span><span class="name">Vellum Hoops</span><span class="stamp">In · 9:04a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0114–03</span><span class="name">Marrow Chain</span><span class="stamp">In · 9:05a</span></span>
+      <span class="ledger-divider">/</span>
+      <span class="ledger-entry"><span class="lot">0114–04</span><span class="name">Dune Cuff</span><span class="stamp">In · 9:07a</span></span>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="container filter-inner">
+      <button class="filter-chip is-active">All Arrivals</button>
+      <button class="filter-chip">Rings</button>
+      <button class="filter-chip">Necklaces</button>
+      <button class="filter-chip">Earrings</button>
+      <button class="filter-chip">Bracelets</button>
+      <button class="filter-chip">Under ₹20,000</button>
+      <button class="filter-chip">This Week Only</button>
+    </div>
+  </div>
+
+  <!-- Product grid -->
+  <section class="arrivals-grid">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Lot № 0114</div>
+        <div class="section-title">Logged This Week</div>
+      </div>
+
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p1">💍</div>
+            <span class="product-badge new">New</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In today, 9:04a</span>
+          </div>
+          <div class="product-info">
+            <h3>Ora Signet</h3>
+            <p class="material">18k Gold · Size 6–9</p>
+            <p class="product-price">₹42,500</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p2">👂</div>
+            <span class="product-badge new">New</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In today, 9:04a</span>
+          </div>
+          <div class="product-info">
+            <h3>Vellum Hoops</h3>
+            <p class="material">Rose Gold Vermeil</p>
+            <p class="product-price">₹18,200</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p3">📿</div>
+            <span class="product-badge new">New</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In today, 9:05a</span>
+          </div>
+          <div class="product-info">
+            <h3>Marrow Chain</h3>
+            <p class="material">Sterling Silver, 20"</p>
+            <p class="product-price">₹27,900</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p4">⌚</div>
+            <span class="product-badge new">New</span>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In today, 9:07a</span>
+          </div>
+          <div class="product-info">
+            <h3>Dune Cuff</h3>
+            <p class="material">Brushed 14k Gold</p>
+            <p class="product-price">₹51,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p5">💍</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In yesterday</span>
+          </div>
+          <div class="product-info">
+            <h3>Bisque Studs</h3>
+            <p class="material">Pavé, 18k White Gold</p>
+            <p class="product-price">₹33,400</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p6">📿</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In yesterday</span>
+          </div>
+          <div class="product-info">
+            <h3>Alder Pendant</h3>
+            <p class="material">Rose Gold, Garnet</p>
+            <p class="product-price">₹24,750 <del>₹29,000</del></p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p7">💍</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In 2 days ago</span>
+          </div>
+          <div class="product-info">
+            <h3>Thistle Band</h3>
+            <p class="material">Sterling Silver</p>
+            <p class="product-price">₹11,600</p>
+          </div>
+        </div>
+
+        
+
+        <div class="product-card">
+          <div class="product-image">
+            <div class="product-image-bg p8">👂</div>
+            <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
+            <span class="arrival-stamp">In 2 days ago</span>
+          </div>
+          <div class="product-info">
+            <h3>Amber Drops</h3>
+            <p class="material">Gold Plated Brass</p>
+            <p class="product-price">₹9,800</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="load-more-wrap">
+        <button class="btn btn-outline">View Earlier Lots</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next drop / notify -->
+  <section class="next-drop">
+    <div class="container next-drop-inner">
+      <div class="section-label" style="color: var(--gold);">Lot № 0115</div>
+      <h2>The next lot is being weighed</h2>
+      <p>Every Friday morning, the week's finished pieces are logged and released. Get word the moment Lot № 0115 clears inventory.</p>
+      <div class="countdown">
+        <div class="countdown-unit"><span class="countdown-num">04</span><span class="countdown-label">Days</span></div>
+        <div class="countdown-unit"><span class="countdown-num">11</span><span class="countdown-label">Hours</span></div>
+        <div class="countdown-unit"><span class="countdown-num">37</span><span class="countdown-label">Mins</span></div>
+      </div>
+      <form class="notify-form" onsubmit="return false;">
+        <input type="email" placeholder="Your email address" required>
+        <button class="btn btn-primary" type="submit">Notify Me at Drop</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">Maison <span>Aurée</span></div>
+          <p>Small-batch fine jewelry, logged into inventory the day it's finished — never held back for a "collection" launch.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="new-arrivals/">New Arrivals</a></li>
+            <li><a href="#">Rings</a></li>
+            <li><a href="#">Necklaces</a></li>
+            <li><a href="#">Earrings</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Care</h4>
+          <ul>
+            <li><a href="#">Sizing Guide</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Cleaning & Repair</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <ul>
+            <li><a href="#">Our Workshop</a></li>
+            <li><a href="#">Bespoke Orders</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Maison Aurée. All rights reserved.</p>
+        <p>Insured shipping · Lifetime resizing</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
