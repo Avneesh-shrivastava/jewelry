@@ -23,4 +23,14 @@ def products(request, id):
     return render(request, 'products.html', context)
 
 def product_overview(request, id):
-    return render(request, 'product_overview.html')
+    product = Product.objects.filter(id=id).first()
+    products = Product.objects.filter(category_id=id)
+    category = Category.objects.get(id=id)
+    context = {
+        "product" : product,
+        'category' : category,
+        "products" : products,
+
+        }
+    print(products.values())
+    return render(request, 'product_overview.html',context)
