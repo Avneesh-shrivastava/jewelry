@@ -26,4 +26,5 @@ urlpatterns = [
     path('new-arrivals/', new_arrivals, name="new_arrivals"),
     path('home-page/', home_page, name="home_page"),
     path('products/<int:id>/', products, name="products"),
+    path('product-overview/<int:id>/', product_overview, name="product_overview"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
