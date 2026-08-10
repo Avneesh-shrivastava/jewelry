@@ -258,14 +258,14 @@
 
   <header class="header">
     <div class="container header-inner">
-      <a href="#" class="logo">Maison <span>Aurée</span></a>
+      <a href="#" class="logo">Zevera <span>Jewellers</span></a>
       <nav class="nav-desktop">
         <ul>
-          <li><a href="#">Rings</a></li>
-          <li><a href="#">Necklaces</a></li>
-          <li><a href="#">Earrings</a></li>
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Bespoke</a></li>
+          <li><a href="/products/1">Rings</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <!-- <li><a href="#">New Arrivals</a></li> -->
+          <li><a href="/products/4">Bespoke</a></li>
         </ul>
       </nav>
       <div class="header-actions">
@@ -297,7 +297,7 @@
   </header>
 
   <div class="container breadcrumb">
-    <a href="#">Home</a><span class="sep">/</span><a href="#">Rings</a><span class="sep">/</span>Ora Solitaire Ring
+    <a href="/home-page">Home</a><span class="sep">/</span><a href="/products/{{product.category_id}}">{{product.category.name}}</a><span class="sep">/</span>Ora Solitaire Ring
   </div>
 
   <!-- PDP -->
@@ -306,7 +306,7 @@
 
       <!-- Gallery -->
       <div class="pdp-gallery">
-        <div class="gallery-main" id="galleryMain">💍</div>
+        <div class="gallery-main" id="galleryMain"><img src="{{ product.image.url }}"></div>
         <div class="gallery-thumbs">
           <div class="thumb t1 is-active" onclick="setGallery(this,'💍','t1')"></div>
           <div class="thumb t2" onclick="setGallery(this,'✨','t2')"></div>
@@ -317,7 +317,7 @@
 
       <!-- Info -->
       <div class="pdp-info">
-        <h1>Ora Solitaire Ring</h1>
+        <h1>{{product.name}}</h1>
         <div class="rating-row">
           <span class="rating-stars">★★★★★</span>
           <span class="rating-count" onclick="document.getElementById('reviews').scrollIntoView({behavior:'smooth'})">36 reviews</span>
