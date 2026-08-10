@@ -1110,7 +1110,7 @@
 
       <div class="category-grid">
         {% for category in categories %}
-        <a href="#" class="category-card">
+        <a href="/products/{{category.id}}" class="category-card">
           <div class="category-bg cat-rings"><img {% if category.image %}
                                                       src="{{ category.image.url }}"
                                                   {% else %}
