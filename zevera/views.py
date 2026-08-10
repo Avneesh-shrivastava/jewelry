@@ -21,3 +21,6 @@ def products(request, id):
         'extra' : extra,
         } 
     return render(request, 'products.html', context)
+
+def product_overview(request, id):
+    return render(request, 'product_overview.html')
