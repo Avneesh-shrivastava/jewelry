@@ -296,14 +296,15 @@
 
   <header class="header">
     <div class="container header-inner">
-      <a href="#" class="logo">Maison <span>Aurée</span></a>
+      <a href="/home-page" class="logo">Zevera <span>Jewellers</span></a>
       <nav class="nav-desktop">
         <ul>
-          <li><a href="/products/1" class="active">Rings</a></li>
-          <li><a href="/products/2">Necklaces</a></li>
-          <li><a href="/products/3">Earrings</a></li>
+          <li><a href="/home-page">Home</a></li>
+          <li><a href="/products/1" class="{% if request.path == '/products/1/' %}active{% endif %}" >Rings</a></li>
+          <li><a href="/products/2" class="{% if request.path == '/products/2/' %}active{% endif %}">Necklaces</a></li>
+          <li><a href="/products/3" class="{% if request.path == '/products/3/' %}active{% endif %}">Earrings</a></li>
           <!-- <li><a href="#">New Arrivals</a></li> -->
-          <li><a href="/products/4">Bespoke</a></li>
+          <li><a href="/products/4" class="{% if request.path == '/products/4/' %}active{% endif %}">Bracelets</a></li>
         </ul>
       </nav>
       <div class="header-actions">
@@ -326,11 +327,12 @@
     <div class="nav-mobile">
       <div class="container">
         <ul>
+          <li><a href="/home-page" >Home</a></li>
           <li><a href="/products/1" class="active">Rings</a></li>
-          <li><a href="#">Necklaces</a></li>
-          <li><a href="#">Earrings</a></li>
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Bespoke</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <!-- <li><a href="#">New Arrivals</a></li> -->
+          <li><a href="/products/4">Bracelets</a></li>
         </ul>
       </div>
     </div>
@@ -342,7 +344,7 @@
       <div class="rings-hero-content">
         <span class="hero-tag"> {{category.name}} </span>
         <!-- <h1>Rings built to <em>fit</em>, not just to shine</h1> -->
-         <h1> {{ extra.headline }}</h1>
+         <h1> <em>{{ extra.headline }}</em></h1>
         <p>{{extra.headline_desc}}</p>
       </div>
       <div class="rings-hero-visual">
@@ -352,7 +354,7 @@
   </section>
 
   <!-- Filter bar -->
-  <div class="filter-bar">
+  <!-- <div class="filter-bar">
     <div class="container filter-inner">
       <button class="filter-chip is-active">All Rings</button>
       <button class="filter-chip">Signet</button>
@@ -362,7 +364,7 @@
       <button class="filter-chip">18k Gold</button>
       <button class="filter-chip">Silver</button>
     </div>
-  </div>
+  </div> -->
 
   <!-- Signature: Find Your Fit size scale -->
   <div class="size-finder">
@@ -397,7 +399,8 @@
       
       <div class="product-grid">
         {% for product in products %}
-        <article class="product-card">
+
+        <a href="/product-overview/{{product.id}}"><article class="product-card">
           <div class="product-image">
             <div class="product-image-bg p1"><img src="{{ product.image.url }}"></div>
             <!-- <span class="product-badge">Bestseller</span> -->
@@ -409,7 +412,7 @@
             <!-- <p class="product-sizes">Sizes 4–10</p> -->
             <p class="product-price">₹{{ product.price }}</p>
           </div>
-        </article>
+        </article></a>
       {% endfor %}
         <!-- <article class="product-card">
           <div class="product-image">
