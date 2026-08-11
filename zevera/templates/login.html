@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a962; --gold-dark: #a88b4a; --rose: #b76e79; --ink: #1a1a1a;
+    --ink-soft: #4a4a4a; --cream: #faf8f5; --white: #ffffff; --border: #e8e4df;
+    --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12); --radius: 4px; --transition: 0.3s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif; color: var(--ink); background: var(--cream);
+    line-height: 1.6; min-height: 100vh; display: flex; align-items: center;
+    justify-content: center; padding: 1.5rem;
+  }
+  a { text-decoration: none; color: inherit; }
+  .auth-wrap { width: 100%; max-width: 400px; }
+  .auth-logo { text-align: center; margin-bottom: 1.75rem; }
+  .auth-logo a { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.04em; }
+  .auth-logo span { color: var(--gold); }
+  .auth-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 2.25rem 1.75rem; }
+  .auth-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; text-align: center; margin-bottom: 0.4rem; }
+  .auth-sub { font-size: 0.8rem; color: var(--ink-soft); text-align: center; margin-bottom: 1.75rem; }
+  .auth-errors { background: rgba(183, 110, 121, 0.1); border: 1px solid var(--rose); color: var(--rose); font-size: 0.78rem; padding: 0.7rem 0.9rem; border-radius: var(--radius); margin-bottom: 1.25rem; }
+  .field-group { margin-bottom: 1.1rem; }
+  .field-label { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem; }
+  .auth-form input[type="text"], .auth-form input[type="password"] {
+    width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+    font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color var(--transition);
+  }
+  .auth-form input:focus { border-color: var(--gold); }
+  .field-error { font-size: 0.72rem; color: var(--rose); margin-top: 0.35rem; }
+  .btn-primary {
+    width: 100%; padding: 0.9rem; background: var(--gold); color: var(--white); border: none;
+    border-radius: var(--radius); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; transition: background var(--transition); margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--gold-dark); }
+  .auth-switch { text-align: center; font-size: 0.8rem; color: var(--ink-soft); margin-top: 1.5rem; }
+  .auth-switch a { color: var(--gold-dark); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .auth-back { text-align: center; margin-top: 1.25rem; }
+  .auth-back a { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  .auth-back a:hover { color: var(--gold-dark); }
+</style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-logo"><a href="{% url 'home_page' %}">Maison <span>Aurée</span></a></div>
+
+    <div class="auth-card">
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-sub">Log in to continue to your account</p>
+
+      {% if form.non_field_errors %}
+        <div class="auth-errors">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</div>
+      {% endif %}
+
+      <form class="auth-form" method="POST">
+        {% csrf_token %}
+        <div class="field-group">
+          <label class="field-label" for="{{ form.username.id_for_label }}">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}<p class="field-error">{{ form.username.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="{{ form.password.id_for_label }}">Password</label>
+          {{ form.password }}
+          {% if form.password.errors %}<p class="field-error">{{ form.password.errors.0 }}</p>{% endif %}
+        </div>
+        <button type="submit" class="btn-primary">Log In</button>
+      </form>
+
+      <p class="auth-switch">Don't have an account? <a href="{% url 'signup' %}">Create one</a></p>
+    </div>
+
+    <div class="auth-back"><a href="{% url 'home_page' %}">← Back to Shop</a></div>
+  </div>
+</body>
+</html>
