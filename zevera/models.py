@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -33,8 +34,7 @@ class Product(models.Model):
     prod_desc = models.TextField(max_length=500)
     image = models.ImageField(upload_to='product_img/', blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
-
-    
+   
     def __str__(self):
         return self.name
 
@@ -42,4 +42,9 @@ class extra_info(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='extra_info',null=True)
     headline = models.CharField(max_length=200)
     headline_desc = models.CharField(max_length=300)
+
+class Reviews(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.TextField(max_length=500)
+    stars = models.IntegerField(null=True)
 
