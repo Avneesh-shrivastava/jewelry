@@ -250,6 +250,80 @@
     @media (min-width: 1024px) {
       .container { padding: 0 2rem; }
     }
+
+
+
+
+
+
+.write-review {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .write-review-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .review-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 0.2rem;
+  }
+
+  .star-rating input {
+    display: none;
+  }
+
+  .star-rating label {
+    font-size: 1.8rem;
+    color: var(--border);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .star-rating label:hover,
+  .star-rating label:hover ~ label,
+  .star-rating input:checked ~ label {
+    color: var(--gold);
+  }
+
+  .review-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.85rem;
+    outline: none;
+    resize: vertical;
+    transition: border-color var(--transition);
+  }
+
+  .review-input:focus {
+    border-color: var(--gold);
+  }
+
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -417,7 +491,7 @@
   <div class="pdp-bottom-spacer"></div>
 
   <!-- Complete the look -->
-  <section>
+  <!-- <section>
     <div class="container">
       <div class="section-header">
         <p class="section-label">Styled Together</p>
@@ -442,7 +516,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- You may also like -->
   <section style="background:var(--white);">
@@ -451,12 +525,16 @@
         <p class="section-label">More To Love</p>
         <h2 class="section-title">You May Also Like</h2>
       </div>
+      
       <div class="related-grid">
-        <article class="product-card">
-          <div class="product-image" style="background:linear-gradient(145deg,#faf8f5,#e8dcc8);">💍</div>
-          <div class="product-info"><h3>Celestial Diamond Ring</h3><p class="material">18K White Gold</p><p class="product-price">₹66,500</p></div>
-        </article>
-        <article class="product-card">
+        {% for pro in products %}
+        <a href='/product-overview/{{pro.id}}'><article class="product-card">
+          <div class="product-image" style="background:linear-gradient(145deg,#faf8f5,#e8dcc8);"><img src="{{ pro.image.url }}"></div>
+          <div class="product-info"><h3>{{pro.name}}</h3><p class="material">{{pro.prod_desc}}</p><p class="product-price">₹{{pro.price}}</p></div>
+        </article></a>
+        {% endfor %}
+      
+        <!-- <article class="product-card">
           <div class="product-image" style="background:linear-gradient(145deg,#f2ece0,#cbb896);">💍</div>
           <div class="product-info"><h3>Ora Signet</h3><p class="material">18K Gold</p><p class="product-price">₹42,500</p></div>
         </article>
@@ -467,14 +545,44 @@
         <article class="product-card">
           <div class="product-image" style="background:linear-gradient(145deg,#efe6e8,#d9a9b2);">💍</div>
           <div class="product-info"><h3>Garnet Bezel Ring</h3><p class="material">14K Gold</p><p class="product-price">₹28,400</p></div>
-        </article>
+        </article> -->
       </div>
+      
     </div>
   </section>
 
+
+<!-- Write Review -->
+  <section>
+      <div class="write-review">
+        <h3 class="write-review-title">Write a Review</h3>
+
+        <form class="review-form" action="{% url 'product_overview' id=product.id %}" method="POST">
+          {% csrf_token %}
+          <div class="star-rating">
+            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+          </div>
+
+          <!-- <input type="text" name="reviewer_name" placeholder="Your name" required class="review-input"> -->
+          <textarea name="review_text" placeholder="Share your thoughts on this piece..." rows="4" required class="review-input"></textarea>
+
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+
+
   <!-- Reviews -->
   <section id="reviews">
-    <div class="container">
+    <div class="container"> 
+    
       <div class="section-header">
         <p class="section-label">Customer Reviews</p>
         <h2 class="section-title">What 36 Customers Say</h2>
