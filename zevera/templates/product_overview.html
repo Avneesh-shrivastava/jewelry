@@ -603,17 +603,31 @@
       </div>
 
       <div class="review-card">
-        <div class="review-head"><span class="review-name">Priya M.</span><span class="review-stars">★★★★★</span></div>
-        <p class="review-text">Exceeded every expectation — the halo catches light beautifully and it fit perfectly on the first try.</p>
+        {% for review in reviews %}
+        <div class="review-head"><span class="review-name">{{review.user}}</span><span class="review-stars">
+          {% if review.stars == 5 %}
+            ★★★★★
+          {% elif review.stars == 4 %}
+            ★★★★
+          {% elif review.stars == 3 %}
+            ★★★
+          {% elif review.stars == 2 %}
+            ★★
+          {% elif review.stars == 1 %}
+            ★
+          {% endif %}    
+        </span></div>
+        <p class="review-text">{{review.review}}</p>
+        {% endfor %}
       </div>
-      <div class="review-card">
+      <!-- <div class="review-card">
         <div class="review-head"><span class="review-name">Ananya S.</span><span class="review-stars">★★★★★</span></div>
         <p class="review-text">Ordered a size up just in case and used the free resize — painless process, quick turnaround.</p>
       </div>
       <div class="review-card">
         <div class="review-head"><span class="review-name">Kavya R.</span><span class="review-stars">★★★★☆</span></div>
         <p class="review-text">Beautiful ring, packaging felt luxe. Only wish the band was slightly wider for the price.</p>
-      </div>
+      </div> -->
     </div>
   </section>
 
