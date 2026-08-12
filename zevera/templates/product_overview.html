@@ -371,7 +371,7 @@
   </header>
 
   <div class="container breadcrumb">
-    <a href="/home-page">Home</a><span class="sep">/</span><a href="/products/{{product.category_id}}">{{product.category.name}}</a><span class="sep">/</span>Ora Solitaire Ring
+    <a href="/home-page">Home</a><span class="sep">/</span><a href="/products/{{product.category_id}}">{{product.category.name}}</a><span class="sep">/</span>{{product.name}}
   </div>
 
   <!-- PDP -->
@@ -585,20 +585,20 @@
     
       <div class="section-header">
         <p class="section-label">Customer Reviews</p>
-        <h2 class="section-title">What 36 Customers Say</h2>
+        <h2 class="section-title">What {{people_reviewed}} Customers Say</h2>
       </div>
       <div class="reviews-summary">
         <div>
-          <div class="reviews-score">4.8</div>
+          <div class="reviews-score">{{review_score}}</div>
           <div class="reviews-score-stars">★★★★★</div>
-          <div class="reviews-score-count">Based on 36 reviews</div>
+          <div class="reviews-score-count">Based on {{people_reviewed}} reviews</div>
         </div>
         <div class="rating-bars">
-          <div class="rating-bar-row">5 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:82%;"></div></div> 82%</div>
-          <div class="rating-bar-row">4 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:12%;"></div></div> 12%</div>
-          <div class="rating-bar-row">3 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:4%;"></div></div> 4%</div>
-          <div class="rating-bar-row">2 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:1%;"></div></div> 1%</div>
-          <div class="rating-bar-row">1 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:1%;"></div></div> 1%</div>
+          <div class="rating-bar-row">5 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{percentage_five}}%;"></div></div> {{percentage_five}}%</div>
+          <div class="rating-bar-row">4 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{percentage_four}}%;"></div></div> {{percentage_four}}%</div>
+          <div class="rating-bar-row">3 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{percentage_three}}%;"></div></div> {{percentage_three}}%</div>
+          <div class="rating-bar-row">2 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{percentage_two}}%;"></div></div> {{percentage_two}}%</div>
+          <div class="rating-bar-row">1 ★ <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{percentage_one}}%;"></div></div> {{percentage_one}}%</div>
         </div>
       </div>
 
