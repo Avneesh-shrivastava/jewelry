@@ -44,6 +44,7 @@ class extra_info(models.Model):
     headline_desc = models.CharField(max_length=300)
 
 class Reviews(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews',null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.TextField(max_length=500)
     stars = models.IntegerField(null=True)
