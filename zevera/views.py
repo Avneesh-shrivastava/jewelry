@@ -31,6 +31,11 @@ def product_overview(request, id):
     category = Category.objects.get(id=id)
     reviews = Reviews.objects.filter(product=id)
 
+
+    no_of_stars = list(reviews.values_list('stars',flat=True))
+    
+
+
     if request.method == "POST":
         stars = request.POST.get("rating")
         review = request.POST.get("review_text")
