@@ -29,6 +29,7 @@ def product_overview(request, id):
     product = Product.objects.filter(id=id).first()
     products = Product.objects.all()
     category = Category.objects.get(id=id)
+    reviews = Reviews.objects.filter(product=id)
 
     if request.method == "POST":
         stars = request.POST.get("rating")
@@ -36,15 +37,18 @@ def product_overview(request, id):
 
         
         Reviews.objects.create(
+            product=product, 
             user=request.user,
             review=review,
             stars=stars
         )
+        return redirect(f"/product-overview/{id}")
     
     context = {
         "product" : product,
         'category' : category,
         "products" : products,
+        "reviews" : reviews
 
         }
     
