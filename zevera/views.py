@@ -30,11 +30,33 @@ def product_overview(request, id):
     products = Product.objects.all()
     category = Category.objects.get(id=id)
     reviews = Reviews.objects.filter(product=id)
+    people_reviewed = len(reviews)
+    try:
+        no_of_stars = list(reviews.values_list('stars',flat=True))
+        five = four = three = two = one = 0
+        for i in no_of_stars:
+            if i == 5:
+                five = five + 1
+            if i == 4:
+                four = four + 1
+            if i == 3:
+                three = three + 1
+            if i == 2:
+                two = two + 1
+            if i == 1:
+                one = one + 1
 
+        no_of_stars = len(no_of_stars)
+        percentage_five = int((five/no_of_stars)*100)
+        percentage_four = int((four/no_of_stars)*100)
+        percentage_three = int((three/no_of_stars)*100)
+        percentage_two = int((two/no_of_stars)*100)
+        percentage_one = int((one/no_of_stars)*100)
 
-    no_of_stars = list(reviews.values_list('stars',flat=True))
-    
-
+        review_score = (five*5 + four*4 + three*3 + two*2 + one)/no_of_stars
+        review_score = round(review_score, 1)
+    except ZeroDivisionError:
+        percentage_five = percentage_four = percentage_three = percentage_two = percentage_one = review_score = 0
 
     if request.method == "POST":
         stars = request.POST.get("rating")
@@ -53,7 +75,16 @@ def product_overview(request, id):
         "product" : product,
         'category' : category,
         "products" : products,
-        "reviews" : reviews
+        "reviews" : reviews,
+
+        "percentage_five" : percentage_five,
+        "percentage_four": percentage_four,
+        "percentage_three": percentage_three,
+        "percentage_two": percentage_two,
+        "percentage_one": percentage_one,
+
+        "review_score" : review_score,
+        "people_reviewed":people_reviewed,
 
         }
     
