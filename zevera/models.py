@@ -48,4 +48,5 @@ class Reviews(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.TextField(max_length=500)
     stars = models.IntegerField(null=True)
+    # review_score = models.IntegerField(null=True)
 
