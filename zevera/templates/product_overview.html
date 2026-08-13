@@ -240,7 +240,7 @@
       .nav-desktop { display: block; }
       .nav-mobile { display: none !important; }
       .pdp-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
-      .gallery-main { position: sticky; top: 80px; }
+      .gallery-main { position: sticky; top: 80px; align-self: start;}
       .related-grid { grid-template-columns: repeat(4, 1fr); }
       .sticky-bar { display: none; }
       .pdp-bottom-spacer { display: none; }
@@ -321,6 +321,13 @@
 
 
 
+  .gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
 
 
 
@@ -380,14 +387,17 @@
 
       <!-- Gallery -->
       <div class="pdp-gallery">
-        <div class="gallery-main" id="galleryMain"><img src="{{ product.image.url }}"></div>
+        <div class="gallery-main" id="galleryMain"><img src="{{product.image.url}}"></div>
+        
         <div class="gallery-thumbs">
           <div class="thumb t1 is-active" onclick="setGallery(this,'💍','t1')"></div>
           <div class="thumb t2" onclick="setGallery(this,'✨','t2')"></div>
           <div class="thumb t3" onclick="setGallery(this,'👐','t3')"></div>
           <div class="thumb t4" onclick="setGallery(this,'📦','t4')"></div>
         </div>
+
       </div>
+
 
       <!-- Info -->
       <div class="pdp-info">
@@ -398,32 +408,37 @@
         </div>
 
         <div class="price-row">
-          <span class="price-now">₹1,42,000</span>
-          <span class="price-was">₹1,68,000</span>
-          <span class="price-save">Save 15%</span>
+          <span class="price-now">₹{{product.price}}</span>
+          <!-- <span class="price-was">₹1,68,000</span>
+          <span class="price-save">Save 15%</span> -->
         </div>
         <p class="price-tax-note">Inclusive of all taxes · Shipping calculated at checkout</p>
 
-        <div class="badge-row">
+        <!-- <div class="badge-row">
           <div class="badge-item"><span>🚚</span>Free Insured Shipping</div>
           <div class="badge-item"><span>💍</span>Lifetime Resizing</div>
           <div class="badge-item"><span>↩</span>7-Day Returns</div>
-        </div>
+        </div> -->
 
+        {% if product.category.name == "Rings" %}
         <div class="option-block">
           <div class="option-label">
             <span>Ring Size</span>
             <a href="#sizing-guide">Size Guide</a>
           </div>
-          <div class="size-chips">
-            <button class="size-chip" onclick="selectSize(this)">5</button>
-            <button class="size-chip is-active" onclick="selectSize(this)">6</button>
-            <button class="size-chip" onclick="selectSize(this)">7</button>
-            <button class="size-chip" onclick="selectSize(this)">8</button>
-            <button class="size-chip" disabled>9</button>
-            <button class="size-chip" onclick="selectSize(this)">10</button>
-          </div>
+         
+              <div class="size-chips">
+                <button class="size-chip" onclick="selectSize(this)" type="submit" name="size" value="5">5</button>
+                <button class="size-chip is-active" onclick="selectSize(this)" type="submit" name="size" value="6">6</button>
+                <button class="size-chip" onclick="selectSize(this)" type="submit" name="size" value="7">7</button>
+                <button class="size-chip" onclick="selectSize(this)" type="submit" name="size" value="8">8</button>
+                <button class="size-chip" disabled>9</button>
+                <button class="size-chip" onclick="selectSize(this)" type="submit" name="size" value="10">10</button>
+              </div>
+          
         </div>
+        {% endif %}
+
 
         <div class="buy-row">
           <div class="qty-selector">
