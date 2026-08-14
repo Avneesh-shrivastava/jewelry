@@ -423,7 +423,7 @@
 <form action="" method="POST">
         <input hidden  value="{{product.name}}" name="prod_name">
         <input hidden  value="{{product.price}}" name="prod_price">
-        
+
         {% if product.category.name == "Rings" %}
         <div class="option-block">
           <div class="option-label">
@@ -444,14 +444,15 @@
         {% endif %}
 
 
-        <div class="buy-row">
-          <div class="qty-selector">
-            <button class="qty-btn" onclick="changeQty(-1)">−</button>
-            <span class="qty-value" id="qtyValue">1</span>
-            <button class="qty-btn" onclick="changeQty(1)">+</button>
-          </div>
-          <button class="btn btn-primary">Add To Cart</button>
-        </div>
+  <div class="buy-row">
+    <div class="qty-selector">
+      <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
+      <span class="qty-value" id="qtyValue">1</span>
+      <input type="hidden" name="quantity" id="qtyInput" value="1">
+      <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+    <button type="submit" class="btn btn-primary">Add To Cart</button>
+  </div>
 
 </form>
 
@@ -720,6 +721,7 @@ We accept returns within 7 days of delivery for eligible items. The {{product.ca
     function changeQty(delta) {
       qty = Math.max(1, qty + delta);
       document.getElementById('qtyValue').textContent = qty;
+      document.getElementById('qtyInput').value = qty;
     }
 
     function toggleAccordion(btn) {
