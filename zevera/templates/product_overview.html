@@ -420,8 +420,10 @@
           <div class="badge-item"><span>↩</span>7-Day Returns</div>
         </div> -->
 
-<form>
-
+<form action="" method="POST">
+        <input hidden  value="{{product.name}}" name="prod_name">
+        <input hidden  value="{{product.price}}" name="prod_price">
+        
         {% if product.category.name == "Rings" %}
         <div class="option-block">
           <div class="option-label">
