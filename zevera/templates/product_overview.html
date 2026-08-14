@@ -420,7 +420,8 @@
           <div class="badge-item"><span>↩</span>7-Day Returns</div>
         </div> -->
 
-<form action="" method="POST">
+<form action="{% url 'add_to_cart' product_id=product.id %}" method="POST">
+  {% csrf_token %}
         <input hidden  value="{{product.name}}" name="prod_name">
         <input hidden  value="{{product.price}}" name="prod_price">
 
