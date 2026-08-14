@@ -120,3 +120,15 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home_page')
+
+from django.shortcuts import get_object_or_404, redirect
+
+def add_to_cart(request, product_id):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        product = get_object_or_404(Product, id=product_id)
+        price = request.POST.get('prod_price')
+
+        print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
+
+    return redirect('product_overview', id=product_id)
