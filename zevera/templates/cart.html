@@ -214,23 +214,25 @@
       <a href="#" class="logo">Maison <span>Aurée</span></a>
       <nav class="nav-desktop">
         <ul>
-          <li><a href="#">Rings</a></li>
-          <li><a href="#">Necklaces</a></li>
-          <li><a href="#">Earrings</a></li>
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Bespoke</a></li>
+          <li><a href="/products/1">Rings</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <li><a href="/products/4">Bracelets</a></li>
+          
         </ul>
       </nav>
       <div class="header-actions">
         <button class="icon-btn" aria-label="Search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </button>
-        <button class="icon-btn" aria-label="Wishlist">♡</button>
+        <button class="icon-btn" aria-label="Wishlist">❤️</button>
         <div class="cart-wrap">
-          <button class="icon-btn" aria-label="Cart">
+          <a href="/cart"><button class="icon-btn" aria-label="Cart">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
-          </button>
-          <span class="cart-count">3</span>
+          </button></a>
+        {% if cart_items_no %}
+            <span class="cart-count">{{cart_items_no}}</span>
+        {% endif %}
         </div>
         <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
         <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
@@ -239,11 +241,11 @@
     <div class="nav-mobile">
       <div class="container">
         <ul>
-          <li><a href="#">Rings</a></li>
-          <li><a href="#">Necklaces</a></li>
-          <li><a href="#">Earrings</a></li>
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Bespoke</a></li>
+          <li><a href="/products/1">Rings</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <li><a href="/products/4">Bracelets</a></li>
+          
         </ul>
       </div>
     </div>
@@ -263,6 +265,7 @@
     <div class="container cart-grid">
 
       <!-- Items -->
+       {% for cart in cart_items %}
       <div class="cart-items">
 
         <div class="cart-item">
@@ -283,8 +286,9 @@
             </div>
           </div>
         </div>
+        {% endfor %}
 
-        <div class="cart-item">
+        <!-- <div class="cart-item">
           <div class="cart-item-img ci2">📿</div>
           <div class="cart-item-body">
             <div class="cart-item-top">
@@ -319,7 +323,7 @@
               </div>
               <a href="#" class="remove-link">Remove</a>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="coupon-box">
