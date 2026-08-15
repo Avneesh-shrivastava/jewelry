@@ -58,6 +58,8 @@ def product_overview(request, id):
     except ZeroDivisionError:
         percentage_five = percentage_four = percentage_three = percentage_two = percentage_one = review_score = 0
 
+
+    # Rating's POST
     if request.method == "POST":
         stars = request.POST.get("rating")
         review = request.POST.get("review_text")
@@ -128,6 +130,12 @@ def add_to_cart(request, product_id):
         quantity = int(request.POST.get('quantity', 1))
         product = get_object_or_404(Product, id=product_id)
         price = request.POST.get('prod_price')
+
+        Cart.objects.create(
+            quantity=quantity,
+            product=product,
+            price=price
+        )
 
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
 
