@@ -50,3 +50,7 @@ class Reviews(models.Model):
     stars = models.IntegerField(null=True)
     # review_score = models.IntegerField(null=True)
 
+class Cart(models.Model):
+    quantity = models.IntegerField()
+    product = models.CharField(max_length=100)
+    price = models.IntegerField()
