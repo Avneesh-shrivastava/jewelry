@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Bag — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif; font-weight: 400; color: var(--ink);
+      background: var(--cream); line-height: 1.6; overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Announcement */
+    .announcement { background: var(--ink); color: var(--cream); text-align: center; padding: 0.6rem 1rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .announcement span { color: var(--gold); }
+
+    /* Header */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); }
+    .logo span { color: var(--gold); }
+    .nav-desktop { display: none; }
+    .nav-desktop ul { display: flex; gap: 2rem; }
+    .nav-desktop a { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; transition: color var(--transition); }
+    .nav-desktop a:hover { color: var(--gold); }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 0.35rem; color: var(--ink); transition: color var(--transition); position: relative; }
+    .icon-btn:hover { color: var(--gold); }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .cart-count { position: absolute; top: -4px; right: -4px; background: var(--gold); color: var(--white); font-size: 0.65rem; font-weight: 600; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-wrap { position: relative; }
+    .cart-wrap .icon-btn { color: var(--gold-dark); }
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 0.35rem; }
+    .menu-toggle span { width: 22px; height: 2px; background: var(--ink); transition: var(--transition); }
+    #nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+    .nav-mobile { max-height: 0; overflow: hidden; background: var(--white); border-top: 1px solid transparent; transition: max-height 0.35s ease, border-color 0.35s ease; }
+    #nav-toggle:checked ~ .nav-mobile { max-height: 400px; border-top-color: var(--border); padding: 1rem 0; }
+    .nav-mobile ul { display: flex; flex-direction: column; gap: 0.75rem; }
+    .nav-mobile a { display: block; padding: 0.5rem 0; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* Breadcrumb + page title */
+    .breadcrumb { padding: 1rem 0 0; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink-soft); text-transform: uppercase; }
+    .breadcrumb a:hover { color: var(--gold-dark); }
+    .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.5; }
+    .cart-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.75rem, 5vw, 2.4rem); font-weight: 600; padding: 1rem 0 0.25rem; }
+    .cart-subtitle { font-size: 0.8rem; color: var(--ink-soft); padding-bottom: 1.5rem; }
+
+    /* Cart layout */
+    .cart-section { padding: 0 0 3rem; }
+    .cart-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+
+    /* Cart items */
+    .cart-items { display: flex; flex-direction: column; }
+    .cart-item {
+      display: grid; grid-template-columns: 84px 1fr; gap: 1rem;
+      padding: 1.25rem 0; border-bottom: 1px solid var(--border);
+    }
+    .cart-item-img {
+      width: 84px; height: 84px; border-radius: var(--radius); overflow: hidden;
+      display: flex; align-items: center; justify-content: center; font-size: 2rem;
+    }
+    .ci1 { background: linear-gradient(145deg, #faf8f5, #e8dcc8); }
+    .ci2 { background: linear-gradient(145deg, #f5eef0, #e8c4cc); }
+    .ci3 { background: linear-gradient(145deg, #f0ebe3, #d4c4a8); }
+    .cart-item-body { display: flex; flex-direction: column; }
+    .cart-item-top { display: flex; justify-content: space-between; gap: 0.75rem; }
+    .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .cart-item-meta { font-size: 0.7rem; color: var(--ink-soft); letter-spacing: 0.03em; margin-bottom: 0.5rem; }
+    .cart-item-price { font-size: 0.88rem; font-weight: 600; color: var(--gold-dark); white-space: nowrap; }
+    .cart-item-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: auto; flex-wrap: wrap; gap: 0.75rem; }
+
+    /* Native quantity stepper — pure HTML/CSS, no JS */
+    .qty-selector { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--radius); width: fit-content; }
+    .qty-input {
+      width: 56px; height: 38px; border: none; text-align: center; font-size: 0.85rem;
+      font-weight: 600; font-family: inherit; color: var(--ink); background: transparent; outline: none;
+    }
+    .qty-input::-webkit-inner-spin-button, .qty-input::-webkit-outer-spin-button { opacity: 1; cursor: pointer; }
+
+    .remove-link { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; }
+    .remove-link:hover { color: var(--rose); }
+
+    /* Coupon */
+    .coupon-box { display: flex; gap: 0.6rem; margin-top: 1.5rem; }
+    .coupon-box input {
+      flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+      font-family: inherit; font-size: 0.8rem; outline: none; transition: border-color var(--transition);
+    }
+    .coupon-box input:focus { border-color: var(--gold); }
+    .coupon-box button {
+      padding: 0 1.25rem; background: var(--ink); color: var(--cream); border: none; border-radius: var(--radius);
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
+    }
+    .coupon-box button:hover { background: var(--gold-dark); }
+
+    .continue-shopping { display: inline-block; margin-top: 1.5rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-dark); }
+    .continue-shopping:hover { color: var(--ink); }
+
+    /* Order summary */
+    .order-summary {
+      background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.5rem; height: fit-content;
+    }
+    .summary-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 1.25rem; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 0.75rem; }
+    .summary-row span:last-child { color: var(--ink); font-weight: 500; }
+    .summary-row.discount span:last-child { color: var(--rose); }
+    .summary-divider { border-top: 1px solid var(--border); margin: 1rem 0; }
+    .summary-total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
+    .summary-total-label { font-size: 0.85rem; font-weight: 600; }
+    .summary-total-value { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 1.5rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition); width: 100%; }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); }
+
+    .summary-note { font-size: 0.68rem; color: var(--ink-soft); text-align: center; margin-top: 0.85rem; line-height: 1.5; }
+
+    /* Trust badges */
+    .badge-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-top: 1.5rem; }
+    .badge-item {
+      background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.65rem 0.4rem; text-align: center; font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.02em; color: var(--ink-soft); line-height: 1.4;
+    }
+    .badge-item span { display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+
+    /* Empty cart state */
+    .empty-cart { text-align: center; padding: 3rem 1rem; }
+    .empty-cart-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+    .empty-cart h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .empty-cart p { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 1.5rem; }
+    .empty-cart .btn { width: auto; padding: 0.9rem 2rem; }
+
+    /* Cross-sell */
+    .cross-sell-section { background: var(--white); padding: 2.5rem 0; }
+    .section-header { text-align: center; margin-bottom: 1.75rem; }
+    .section-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 600; }
+    .card-strip { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
+    .card-strip::-webkit-scrollbar { display: none; }
+    .mini-card { flex: none; width: 150px; background: var(--cream); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .mini-card-img { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+    .mini-card-info { padding: 0.75rem; }
+    .mini-card-info h4 { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.3rem; line-height: 1.3; }
+    .mini-card-price { font-size: 0.75rem; font-weight: 600; color: var(--gold-dark); }
+
+    /* Footer */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 3rem 0 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+    .footer-brand .logo { color: var(--cream); margin-bottom: 0.75rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; opacity: 0.75; }
+    .footer-col h4 { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col a { font-size: 0.8rem; opacity: 0.75; transition: opacity var(--transition); }
+    .footer-col a:hover { opacity: 1; color: var(--gold); }
+    .footer-bottom { border-top: 1px solid rgba(250, 248, 245, 0.1); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; align-items: center; text-align: center; }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      .cart-item { grid-template-columns: 100px 1fr; }
+      .cart-item-img { width: 100px; height: 100px; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+    }
+
+    /* Desktop */
+    @media (min-width: 768px) {
+      .menu-toggle { display: none; }
+      .nav-desktop { display: block; }
+      .nav-mobile { display: none !important; }
+      .cart-grid { grid-template-columns: 1.8fr 1fr; gap: 3rem; align-items: start; }
+      .order-summary { position: sticky; top: 90px; }
+      section, .cart-section { padding-bottom: 4.5rem; }
+      .cross-sell-section { padding: 4rem 0; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <div class="announcement">Free insured shipping over ₹15,000 · <span>Lifetime resizing on every ring</span></div>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">Maison <span>Aurée</span></a>
+      <nav class="nav-desktop">
+        <ul>
+          <li><a href="#">Rings</a></li>
+          <li><a href="#">Necklaces</a></li>
+          <li><a href="#">Earrings</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Bespoke</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Wishlist">♡</button>
+        <div class="cart-wrap">
+          <button class="icon-btn" aria-label="Cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+          </button>
+          <span class="cart-count">3</span>
+        </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+        <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+    <div class="nav-mobile">
+      <div class="container">
+        <ul>
+          <li><a href="#">Rings</a></li>
+          <li><a href="#">Necklaces</a></li>
+          <li><a href="#">Earrings</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Bespoke</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="container breadcrumb">
+    <a href="#">Home</a><span class="sep">/</span>Shopping Bag
+  </div>
+
+  <div class="container">
+    <h1 class="cart-title">Your Shopping Bag</h1>
+    <p class="cart-subtitle">3 items</p>
+  </div>
+
+  <!-- Cart -->
+  <section class="cart-section">
+    <div class="container cart-grid">
+
+      <!-- Items -->
+      <div class="cart-items">
+
+        <div class="cart-item">
+          <div class="cart-item-img ci1">💍</div>
+          <div class="cart-item-body">
+            <div class="cart-item-top">
+              <div>
+                <h3 class="cart-item-name">Ora Solitaire Ring</h3>
+                <p class="cart-item-meta">18K White Gold · Size 6</p>
+              </div>
+              <span class="cart-item-price">₹1,42,000</span>
+            </div>
+            <div class="cart-item-bottom">
+              <div class="qty-selector">
+                <input type="number" class="qty-input" value="1" min="1" max="10">
+              </div>
+              <a href="#" class="remove-link">Remove</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart-item">
+          <div class="cart-item-img ci2">📿</div>
+          <div class="cart-item-body">
+            <div class="cart-item-top">
+              <div>
+                <h3 class="cart-item-name">Alder Pendant</h3>
+                <p class="cart-item-meta">Rose Gold · 18-inch Chain</p>
+              </div>
+              <span class="cart-item-price">₹24,750</span>
+            </div>
+            <div class="cart-item-bottom">
+              <div class="qty-selector">
+                <input type="number" class="qty-input" value="1" min="1" max="10">
+              </div>
+              <a href="#" class="remove-link">Remove</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart-item">
+          <div class="cart-item-img ci3">👂</div>
+          <div class="cart-item-body">
+            <div class="cart-item-top">
+              <div>
+                <h3 class="cart-item-name">Vellum Hoops</h3>
+                <p class="cart-item-meta">Rose Gold Vermeil</p>
+              </div>
+              <span class="cart-item-price">₹18,200</span>
+            </div>
+            <div class="cart-item-bottom">
+              <div class="qty-selector">
+                <input type="number" class="qty-input" value="1" min="1" max="10">
+              </div>
+              <a href="#" class="remove-link">Remove</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="coupon-box">
+          <input type="text" placeholder="Enter coupon code">
+          <button>Apply</button>
+        </div>
+
+        <a href="#" class="continue-shopping">← Continue Shopping</a>
+      </div>
+
+      <!-- Summary -->
+      <div class="order-summary">
+        <h3 class="summary-title">Order Summary</h3>
+
+        <div class="summary-row"><span>Subtotal</span><span>₹1,84,950</span></div>
+        <div class="summary-row"><span>Shipping</span><span>Free</span></div>
+        <div class="summary-row discount"><span>Discount</span><span>−₹0</span></div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <span class="summary-total-label">Total</span>
+          <span class="summary-total-value">₹1,84,950</span>
+        </div>
+
+        <button class="btn btn-primary">Proceed To Checkout</button>
+        <p class="summary-note">Inclusive of all taxes. Insured shipping included on every order.</p>
+
+        <div class="badge-row">
+          <div class="badge-item"><span>🚚</span>Insured Shipping</div>
+          <div class="badge-item"><span>💍</span>Lifetime Resizing</div>
+          <div class="badge-item"><span>↩</span>7-Day Returns</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Cross-sell -->
+  <section class="cross-sell-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Styled Together</p>
+        <h2 class="section-title">You Might Also Like</h2>
+      </div>
+      <div class="card-strip">
+        <div class="mini-card">
+          <div class="mini-card-img" style="background:linear-gradient(145deg,#f2ece0,#cbb896);">💍</div>
+          <div class="mini-card-info"><h4>Ora Signet</h4><p class="mini-card-price">₹42,500</p></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-img" style="background:linear-gradient(145deg,#eae6e0,#b9ae9c);">💍</div>
+          <div class="mini-card-info"><h4>Thistle Band</h4><p class="mini-card-price">₹11,600</p></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-img" style="background:linear-gradient(145deg,#ebe8e4,#c9b896);">📿</div>
+          <div class="mini-card-info"><h4>Marrow Chain</h4><p class="mini-card-price">₹27,900</p></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-img" style="background:linear-gradient(145deg,#efe6e8,#d9a9b2);">💍</div>
+          <div class="mini-card-info"><h4>Garnet Bezel Ring</h4><p class="mini-card-price">₹28,400</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    Empty cart state — swap the .cart-grid block above with this
+    when the cart has zero items:
+
+  <div class="empty-cart">
+    <div class="empty-cart-icon">🛍️</div>
+    <h2>Your bag is empty</h2>
+    <p>Looks like you haven't added anything yet.</p>
+    <a href="#" class="btn btn-primary">Start Shopping</a>
+  </div>
+  -->
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">Maison <span>Aurée</span></div>
+          <p>Small-batch fine jewelry, fitted to you before it ever leaves the workshop.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul><li><a href="#">Rings</a></li><li><a href="#">Necklaces</a></li><li><a href="#">Earrings</a></li><li><a href="#">New Arrivals</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Care</h4>
+          <ul><li><a href="#">Sizing Guide</a></li><li><a href="#">Returns</a></li><li><a href="#">Cleaning & Repair</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <ul><li><a href="#">Our Workshop</a></li><li><a href="#">Bespoke Orders</a></li><li><a href="#">Contact</a></li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Maison Aurée. All rights reserved.</p>
+        <p>Insured shipping · Lifetime resizing</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
