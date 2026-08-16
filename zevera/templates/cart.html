@@ -257,26 +257,27 @@
 
   <div class="container">
     <h1 class="cart-title">Your Shopping Bag</h1>
-    <p class="cart-subtitle">3 items</p>
+    <p class="cart-subtitle">{{no_of_cart_items}} items</p>
   </div>
 
   <!-- Cart -->
   <section class="cart-section">
+    
     <div class="container cart-grid">
-
+      {% for cart in cart_items %}
       <!-- Items -->
-       {% for cart in cart_items %}
+       
       <div class="cart-items">
 
         <div class="cart-item">
-          <div class="cart-item-img ci1">💍</div>
+          <div class="cart-item-img ci1"><img src="{{cart.products.image.url}}"></div>
           <div class="cart-item-body">
             <div class="cart-item-top">
               <div>
-                <h3 class="cart-item-name">Ora Solitaire Ring</h3>
-                <p class="cart-item-meta">18K White Gold · Size 6</p>
+                <h3 class="cart-item-name">{{cart.product}}</h3>
+                <p class="cart-item-meta">18K White Gold · Size {{cart.size}}</p>
               </div>
-              <span class="cart-item-price">₹1,42,000</span>
+              <span class="cart-item-price">₹{{cart.price}}</span>
             </div>
             <div class="cart-item-bottom">
               <div class="qty-selector">
@@ -286,7 +287,7 @@
             </div>
           </div>
         </div>
-        {% endfor %}
+        
 
         <!-- <div class="cart-item">
           <div class="cart-item-img ci2">📿</div>
@@ -325,6 +326,7 @@
             </div>
           </div> -->
         </div>
+        {% endfor %}
 
         <div class="coupon-box">
           <input type="text" placeholder="Enter coupon code">
