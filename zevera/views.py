@@ -6,8 +6,12 @@ from django.shortcuts import render, redirect
 
 def home_page(request):
     categories = Category.objects.all()
+    cart = Cart.objects.all()
+    cart_items_no = len(cart)
+
     context = {
-        'categories' : categories
+        'categories' : categories,
+        'cart_items_no' : cart_items_no
     }
     return render(request, 'home_page.html',context)
 
@@ -18,10 +22,13 @@ def products(request, id):
     products = Product.objects.filter(category_id=id)
     category = Category.objects.get(id=id)
     extra = extra_info.objects.get(category_id=id)
+    cart = Cart.objects.all()
+    cart_items_no = len(cart)
     context = {
         "products" : products,
         'category' : category,
         'extra' : extra,
+        'cart_items_no': cart_items_no
         } 
     return render(request, 'products.html', context)
 
@@ -130,6 +137,9 @@ def add_to_cart(request, product_id):
         quantity = int(request.POST.get('quantity', 1))
         product = get_object_or_404(Product, id=product_id)
         price = request.POST.get('prod_price')
+        size = request.POST.get('size')
+
+        print(size)
 
         Cart.objects.create(
             quantity=quantity,
@@ -140,3 +150,12 @@ def add_to_cart(request, product_id):
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
 
     return redirect('product_overview', id=product_id)
+
+def cart(request):
+    cart_items = Cart.objects.all()
+    no_of_cart_items = len(cart_items)
+    context = {
+        "cart_items":cart_items,
+        "no_of_cart_items": no_of_cart_items
+    }
+    return render(request, 'cart.html',context)
