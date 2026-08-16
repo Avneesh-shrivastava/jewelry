@@ -51,6 +51,8 @@ class Reviews(models.Model):
     # review_score = models.IntegerField(null=True)
 
 class Cart(models.Model):
+    products = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart',null=True)
     quantity = models.IntegerField()
     product = models.CharField(max_length=100)
-    price = models.IntegerField()
+    price = models.FloatField()
+    size = models.CharField(max_length=5, null=True)
