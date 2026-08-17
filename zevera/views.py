@@ -138,14 +138,17 @@ def add_to_cart(request, product_id):
         product = get_object_or_404(Product, id=product_id)
         price = request.POST.get('prod_price')
         size = request.POST.get('size')
+        products = Product.objects.filter(id=product_id).first()
 
         print(size)
+        print(type(products))
 
-        Cart.objects.create(
-            quantity=quantity,
-            product=product,
-            price=price
-        )
+        # Cart.objects.create(
+        #     quantity=quantity,
+        #     product=product,
+        #     price=price,
+        #     products=product
+        # )
 
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
 
@@ -158,6 +161,7 @@ def cart(request):
         "cart_items":cart_items,
         "no_of_cart_items": no_of_cart_items
     }
+    print(cart_items.products.image.url)
     return render(request, 'cart.html',context)
 
 def remove_cart(request, rm_id):
