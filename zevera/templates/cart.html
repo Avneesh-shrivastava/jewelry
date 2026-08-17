@@ -218,7 +218,6 @@
           <li><a href="/products/2">Necklaces</a></li>
           <li><a href="/products/3">Earrings</a></li>
           <li><a href="/products/4">Bracelets</a></li>
-          
         </ul>
       </nav>
       <div class="header-actions">
@@ -230,9 +229,9 @@
           <a href="/cart"><button class="icon-btn" aria-label="Cart">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
           </button></a>
-        {% if cart_items_no %}
-            <span class="cart-count">{{cart_items_no}}</span>
-        {% endif %}
+          {% if no_of_cart_items %}
+            <span class="cart-count">{{ no_of_cart_items }}</span>
+          {% endif %}
         </div>
         <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
         <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
@@ -245,7 +244,6 @@
           <li><a href="/products/2">Necklaces</a></li>
           <li><a href="/products/3">Earrings</a></li>
           <li><a href="/products/4">Bracelets</a></li>
-          
         </ul>
       </div>
     </div>
@@ -257,98 +255,67 @@
 
   <div class="container">
     <h1 class="cart-title">Your Shopping Bag</h1>
-    <p class="cart-subtitle">{{no_of_cart_items}} items</p>
+    <p class="cart-subtitle">{{ no_of_cart_items }} item{{ no_of_cart_items|pluralize }}</p>
   </div>
 
+  {% if cart_items %}
   <!-- Cart -->
   <section class="cart-section">
-    
     <div class="container cart-grid">
-      {% for cart in cart_items %}
-      <!-- Items -->
-       
+
+      <!-- Items — single wrapper OUTSIDE the loop so it doesn't fragment per item -->
       <div class="cart-items">
-
-        <div class="cart-item">
-          <div class="cart-item-img ci1"><img src="{{cart.products.image.url}}"></div>
+        {% for cart in cart_items %}
+        <div class="cart-item" data-cart-id="{{ cart.id }}">
+          <div class="cart-item-img ci1">
+            <img src="{{ cart.products.image.url }}" alt="{{ cart.product }}">
+          </div>
           <div class="cart-item-body">
             <div class="cart-item-top">
               <div>
-                <h3 class="cart-item-name">{{cart.product}}</h3>
-                <p class="cart-item-meta">18K White Gold · Size {{cart.size}}</p>
+                <h3 class="cart-item-name">{{ cart.product }}</h3>
+                <p class="cart-item-meta">18K White Gold · Size {{ cart.size }}</p>
               </div>
-              <span class="cart-item-price">₹{{cart.price}}</span>
+              <span class="cart-item-price" data-unit-price="{{ cart.price }}">₹{{ cart.price }}</span>
             </div>
             <div class="cart-item-bottom">
               <div class="qty-selector">
-                <input type="number" class="qty-input" value="1" min="1" max="10">
+                <input
+                  type="number"
+                  class="qty-input"
+                  name="qty-{{ cart.id }}"
+                  data-cart-id="{{ cart.id }}"
+                  value="{{ cart.quantity|default:1 }}"
+                  min="1"
+                  max="10">
               </div>
-              <a href="#" class="remove-link">Remove</a>
+              <a href="/remove-cart/{{ cart.id }}" class="remove-link">Remove</a>
             </div>
           </div>
-        </div>
-        
-
-        <!-- <div class="cart-item">
-          <div class="cart-item-img ci2">📿</div>
-          <div class="cart-item-body">
-            <div class="cart-item-top">
-              <div>
-                <h3 class="cart-item-name">Alder Pendant</h3>
-                <p class="cart-item-meta">Rose Gold · 18-inch Chain</p>
-              </div>
-              <span class="cart-item-price">₹24,750</span>
-            </div>
-            <div class="cart-item-bottom">
-              <div class="qty-selector">
-                <input type="number" class="qty-input" value="1" min="1" max="10">
-              </div>
-              <a href="#" class="remove-link">Remove</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="cart-item">
-          <div class="cart-item-img ci3">👂</div>
-          <div class="cart-item-body">
-            <div class="cart-item-top">
-              <div>
-                <h3 class="cart-item-name">Vellum Hoops</h3>
-                <p class="cart-item-meta">Rose Gold Vermeil</p>
-              </div>
-              <span class="cart-item-price">₹18,200</span>
-            </div>
-            <div class="cart-item-bottom">
-              <div class="qty-selector">
-                <input type="number" class="qty-input" value="1" min="1" max="10">
-              </div>
-              <a href="#" class="remove-link">Remove</a>
-            </div>
-          </div> -->
         </div>
         {% endfor %}
-
-        <div class="coupon-box">
-          <input type="text" placeholder="Enter coupon code">
-          <button>Apply</button>
-        </div>
-
-        <a href="#" class="continue-shopping">← Continue Shopping</a>
       </div>
+
+      <div class="coupon-box">
+        <input type="text" placeholder="Enter coupon code">
+        <button>Apply</button>
+      </div>
+
+      <a href="#" class="continue-shopping">← Continue Shopping</a>
 
       <!-- Summary -->
       <div class="order-summary">
         <h3 class="summary-title">Order Summary</h3>
 
-        <div class="summary-row"><span>Subtotal</span><span>₹1,84,950</span></div>
-        <div class="summary-row"><span>Shipping</span><span>Free</span></div>
-        <div class="summary-row discount"><span>Discount</span><span>−₹0</span></div>
+        <div class="summary-row"><span>Subtotal</span><span>₹{{ subtotal }}</span></div>
+        <div class="summary-row"><span>Shipping</span><span>{% if shipping %}₹{{ shipping }}{% else %}Free{% endif %}</span></div>
+        <div class="summary-row discount"><span>Discount</span><span>−₹{{ discount|default:0 }}</span></div>
 
         <div class="summary-divider"></div>
 
         <div class="summary-total">
           <span class="summary-total-label">Total</span>
-          <span class="summary-total-value">₹1,84,950</span>
+          <span class="summary-total-value">₹{{ total }}</span>
         </div>
 
         <button class="btn btn-primary">Proceed To Checkout</button>
@@ -392,17 +359,19 @@
     </div>
   </section>
 
-  <!--
-    Empty cart state — swap the .cart-grid block above with this
-    when the cart has zero items:
-
-  <div class="empty-cart">
-    <div class="empty-cart-icon">🛍️</div>
-    <h2>Your bag is empty</h2>
-    <p>Looks like you haven't added anything yet.</p>
-    <a href="#" class="btn btn-primary">Start Shopping</a>
-  </div>
-  -->
+  {% else %}
+  <!-- Empty cart state -->
+  <section class="cart-section">
+    <div class="container">
+      <div class="empty-cart">
+        <div class="empty-cart-icon">🛍️</div>
+        <h2>Your bag is empty</h2>
+        <p>Looks like you haven't added anything yet.</p>
+        <a href="/" class="btn btn-primary">Start Shopping</a>
+      </div>
+    </div>
+  </section>
+  {% endif %}
 
   <!-- Footer -->
   <footer class="footer">
