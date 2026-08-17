@@ -355,10 +355,12 @@
         </button>
         <button class="icon-btn" aria-label="Wishlist">♡</button>
         <div class="cart-wrap">
-          <button class="icon-btn" aria-label="Cart">
+          <a href="/cart"><button class="icon-btn" aria-label="Cart">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
-          </button>
-          <span class="cart-count">2</span>
+          </button></a>
+          {% if cart_items_no %}
+            <span class="cart-count">{{cart_items_no}}</span>
+          {% endif %}
         </div>
         <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
         <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
