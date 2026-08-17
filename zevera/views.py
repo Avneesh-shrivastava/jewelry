@@ -159,3 +159,7 @@ def cart(request):
         "no_of_cart_items": no_of_cart_items
     }
     return render(request, 'cart.html',context)
+
+def remove_cart(request, rm_id):
+    Cart.objects.filter(id=rm_id).delete()
+    return redirect('cart')
