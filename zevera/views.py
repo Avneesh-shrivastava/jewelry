@@ -150,6 +150,9 @@ def add_to_cart(request, product_id):
             product=product,
             price=price,  
         )
+        if not created:
+            current_obj = Cart.objects.get(id=product_id)
+            current_obj.quantity += 1
 
 
 
@@ -162,17 +165,25 @@ def cart(request):
     no_of_cart_items = len(cart_items)
     prod_prices = cart_items.values_list('price', flat=True )
     subtotal = sum(prod_prices)
+    coupon_code = ''
 
     if request.method =='POST':
         coupon_code = request.POST.get('coupon_code')
-        print(coupon_code)
+
+    discount = ""
+    if coupon_code == "GET20":
+        discount = round(subtotal*0.20, 2)
+
+    total_price = subtotal - discount   
 
     context = {
         "cart_items":cart_items,
         "no_of_cart_items": no_of_cart_items,
         "subtotal":subtotal,
+        "discount":discount,
+        "total_price": total_price
     }
-
+        
 
     
     
