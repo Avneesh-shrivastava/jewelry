@@ -160,10 +160,16 @@ def add_to_cart(request, product_id):
 def cart(request):
     cart_items = Cart.objects.all()
     no_of_cart_items = len(cart_items)
+    prod_prices = cart_items.values_list('price', flat=True )
+    subtotal = sum(prod_prices)
     context = {
         "cart_items":cart_items,
-        "no_of_cart_items": no_of_cart_items
+        "no_of_cart_items": no_of_cart_items,
+        "subtotal":subtotal,
     }
+
+
+    
     
     return render(request, 'cart.html',context)
 
