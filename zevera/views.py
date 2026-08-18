@@ -162,6 +162,11 @@ def cart(request):
     no_of_cart_items = len(cart_items)
     prod_prices = cart_items.values_list('price', flat=True )
     subtotal = sum(prod_prices)
+
+    if request.method =='POST':
+        coupon_code = request.POST.get('coupon_code')
+        print(coupon_code)
+
     context = {
         "cart_items":cart_items,
         "no_of_cart_items": no_of_cart_items,
