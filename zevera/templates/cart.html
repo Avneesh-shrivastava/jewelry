@@ -274,7 +274,7 @@
             <div class="cart-item-top">
               <div>
                 <h3 class="cart-item-name">{{ cart.product }}</h3>
-                <p class="cart-item-meta">18K White Gold · Size {{ cart.size }}</p>
+                <p class="cart-item-meta">Size {{ cart.size }}</p>
               </div>
               <span class="cart-item-price" data-unit-price="{{ cart.price }}">₹{{ cart.price }}</span>
             </div>
@@ -296,12 +296,14 @@
         {% endfor %}
       </div>
 
+      <form action="{% url 'cart' %}" method="POST">
+      {% csrf_token %}
       <div class="coupon-box">
         <input type="text" placeholder="Enter coupon code">
         <button>Apply</button>
       </div>
 
-      <a href="#" class="continue-shopping">← Continue Shopping</a>
+      <a href="/products/1" class="continue-shopping">← Continue Shopping</a>
 
       <!-- Summary -->
       <div class="order-summary">
