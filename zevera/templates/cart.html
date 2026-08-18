@@ -299,9 +299,10 @@
       <form action="{% url 'cart' %}" method="POST">
       {% csrf_token %}
       <div class="coupon-box">
-        <input type="text" placeholder="Enter coupon code">
-        <button>Apply</button>
+        <input type="text" name="coupon_code" placeholder="Enter coupon code">
+        <button type="submit">Apply</button>
       </div>
+      </form>
 
       <a href="/products/1" class="continue-shopping">← Continue Shopping</a>
 
