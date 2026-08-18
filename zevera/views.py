@@ -164,7 +164,7 @@ def cart(request):
         "cart_items":cart_items,
         "no_of_cart_items": no_of_cart_items
     }
-    print(cart_items.products.image.url)
+    
     return render(request, 'cart.html',context)
 
 def remove_cart(request, rm_id):
