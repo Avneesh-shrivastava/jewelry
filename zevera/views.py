@@ -138,6 +138,7 @@ def add_to_cart(request, product_id):
         product = get_object_or_404(Product, id=product_id)
         price = request.POST.get('prod_price')
         size = request.POST.get('size')
+ 
         
 
         print(size)
