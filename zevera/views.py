@@ -152,9 +152,10 @@ def add_to_cart(request, product_id):
         )
         if not created:
             current_obj = Cart.objects.get(products_id=product_id)
-            current_obj.quantity += 1
+            current_obj.quantity += 1 
             current_obj.save()
-
+            current_obj.price = current_obj.price * current_obj.quantity
+            current_obj.save()   
 
 
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
