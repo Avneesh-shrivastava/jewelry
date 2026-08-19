@@ -281,14 +281,16 @@
             </div>
             <div class="cart-item-bottom">
               <div class="qty-selector">
+                <form action="{% url 'add_to_cart' product_id={{cart.products_id}} %}">
                 <input
-                  type="number"
+                  type="submit"
                   class="qty-input"
-                  name="qty-{{ cart.id }}"
+                  name="inc_dec_qty"
                   data-cart-id="{{ cart.id }}"
                   value="{{ cart.quantity|default:1 }}"
                   min="1"
                   max="10">
+                  </form>
               </div>
               <a href="/remove-cart/{{ cart.id }}" class="remove-link">Remove</a>
             </div>
