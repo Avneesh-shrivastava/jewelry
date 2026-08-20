@@ -143,12 +143,12 @@ def logout_view(request):
 from django.shortcuts import get_object_or_404, redirect
 
 @login_required
-def add_to_cart(request, product_id, cart_id):
+def add_to_cart(request, product_id):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
         product = get_object_or_404(Product, id=product_id)
         price = request.POST.get('prod_price')
-        size = request.POST.get('size')
+        size = request.POST.get('size',6)
  
         
 
@@ -158,18 +158,21 @@ def add_to_cart(request, product_id, cart_id):
         obj, created = Cart.objects.get_or_create(
             user = request.user,
             products=product,
-            quantity=quantity,
             product=product,
-            price=price,  
+            price=price,
+            size=size,  
+            defaults = {
+                "quantity":quantity,
+            }
         )
         if not created:
-            pass
-            # current_obj = Cart.objects.get(products_id=product_id)
-            # current_obj.quantity += 1 
+            
+            current_obj = Cart.objects.get(products_id=product_id)
+            current_obj.quantity += 1 
             # current_obj.save()
             # current_obj.price = current_obj.price * current_obj.quantity
             # current_obj.save()   
-        print(cart_id)
+        
 
 
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
