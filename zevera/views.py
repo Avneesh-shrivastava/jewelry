@@ -3,6 +3,7 @@ from .models import *
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 def home_page(request):
     categories = Category.objects.all()
@@ -32,12 +33,15 @@ def products(request, id):
         } 
     return render(request, 'products.html', context)
 
+
 def product_overview(request, id):
     product = Product.objects.filter(id=id).first()
     products = Product.objects.all()
     category = Category.objects.get(id=id)
     reviews = Reviews.objects.filter(product=id)
     people_reviewed = len(reviews)
+    no_of_cart_items = len(Cart.objects.all())
+
     try:
         no_of_stars = list(reviews.values_list('stars',flat=True))
         five = four = three = two = one = 0
@@ -94,6 +98,7 @@ def product_overview(request, id):
 
         "review_score" : review_score,
         "people_reviewed":people_reviewed,
+        "no_of_cart_items":no_of_cart_items,
 
         }
     
@@ -132,6 +137,7 @@ def logout_view(request):
 
 from django.shortcuts import get_object_or_404, redirect
 
+@login_required
 def add_to_cart(request, product_id):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
@@ -163,6 +169,7 @@ def add_to_cart(request, product_id):
 
     return redirect('product_overview', id=product_id)
 
+@login_required
 def cart(request):
     cart_items = Cart.objects.all()
     no_of_cart_items = len(cart_items)
@@ -194,6 +201,7 @@ def cart(request):
     
     return render(request, 'cart.html',context)
 
+@login_required
 def remove_cart(request, rm_id):
     Cart.objects.filter(id=rm_id).delete()
     return redirect('cart')
