@@ -40,7 +40,9 @@ def product_overview(request, id):
     category = Category.objects.get(id=id)
     reviews = Reviews.objects.filter(product=id)
     people_reviewed = len(reviews)
-    no_of_cart_items = len(Cart.objects.all())
+    cart = Cart.objects.all()
+    no_of_cart_items = len(cart)
+    
 
     try:
         no_of_stars = list(reviews.values_list('stars',flat=True))
@@ -100,6 +102,8 @@ def product_overview(request, id):
         "people_reviewed":people_reviewed,
         "no_of_cart_items":no_of_cart_items,
 
+        "cart": cart,
+
         }
     
     return render(request, 'product_overview.html',context)
@@ -138,7 +142,7 @@ def logout_view(request):
 from django.shortcuts import get_object_or_404, redirect
 
 @login_required
-def add_to_cart(request, product_id):
+def add_to_cart(request, product_id, cart_id):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
         product = get_object_or_404(Product, id=product_id)
@@ -158,11 +162,13 @@ def add_to_cart(request, product_id):
             price=price,  
         )
         if not created:
-            current_obj = Cart.objects.get(products_id=product_id)
-            current_obj.quantity += 1 
-            current_obj.save()
-            current_obj.price = current_obj.price * current_obj.quantity
-            current_obj.save()   
+            pass
+            # current_obj = Cart.objects.get(products_id=product_id)
+            # current_obj.quantity += 1 
+            # current_obj.save()
+            # current_obj.price = current_obj.price * current_obj.quantity
+            # current_obj.save()   
+        print(cart_id)
 
 
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
@@ -173,9 +179,10 @@ def add_to_cart(request, product_id):
 def cart(request):
     cart_items = Cart.objects.all()
     no_of_cart_items = len(cart_items)
-    prod_prices = cart_items.values_list('price', flat=True )
+    prod_prices = cart_items.values_list('price', flat=True)
     subtotal = sum(prod_prices)
     coupon_code = ''
+    
 
 
     if request.method =='POST':
