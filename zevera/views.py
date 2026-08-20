@@ -40,8 +40,9 @@ def product_overview(request, id):
     category = Category.objects.get(id=id)
     reviews = Reviews.objects.filter(product=id)
     people_reviewed = len(reviews)
-    cart = Cart.objects.all()
-    no_of_cart_items = len(cart)
+    cart = Cart.objects.filter(products_id=id)
+    print(cart)
+    no_of_cart_items = len(Cart.objects.all())
     
 
     try:
