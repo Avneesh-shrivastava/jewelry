@@ -56,4 +56,4 @@ class Cart(models.Model):
     quantity = models.IntegerField()
     product = models.CharField(max_length=100)
     price = models.FloatField()
-    size = models.CharField(max_length=5, null=True, default=6)
+    size = models.CharField(max_length=5,null=True,default=6)
