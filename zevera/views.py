@@ -188,7 +188,6 @@ def cart(request):
     coupon_code = ''
     
 
-
     if request.method =='POST':
         coupon_code = request.POST.get('coupon_code')
         coupon_code = coupon_code.upper()
