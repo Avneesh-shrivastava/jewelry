@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 def home_page(request):
     categories = Category.objects.all()
@@ -215,3 +218,39 @@ def cart(request):
 def remove_cart(request, rm_id):
     Cart.objects.filter(id=rm_id).delete()
     return redirect('cart')
+
+@login_required
+def update_cart(request, cart_id):
+
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+
+        quantity = int(data.get('quantity'))
+
+        if quantity < 1:
+            return JsonResponse({
+                'success': False,
+                'error': 'Quantity must be at least 1'
+            })
+
+        if quantity > 10:
+            return JsonResponse({
+                'success': False,
+                'error': 'Maximum quantity is 10'
+            })
+
+        cart = get_object_or_404(Cart, id=cart_id)
+
+        cart.quantity = quantity
+        cart.save()
+
+        return JsonResponse({
+            'success': True,
+            'quantity': cart.quantity
+        })
+
+    return JsonResponse({
+        'success': False,
+        'error': 'Invalid request'
+    })
