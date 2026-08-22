@@ -269,7 +269,7 @@
         {% for cart in cart_items %}
         <div class="cart-item" data-cart-id="{{ cart.id }}">
           <div class="cart-item-img ci1">
-            <img src="{{cart.products.image.url}}" alt="{{ cart.product }}">
+            <a href="/product-overview/{{cart.products_id}}"><img src="{{cart.products.image.url}}" alt="{{ cart.product }}"></a>
           </div>
           <div class="cart-item-body">
             <div class="cart-item-top">
