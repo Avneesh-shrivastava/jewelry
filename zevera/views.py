@@ -46,6 +46,7 @@ def product_overview(request, id):
     cart = Cart.objects.filter(products_id=id)
     print(cart)
     no_of_cart_items = len(Cart.objects.all())
+    product_images = ProductImage.objects.all()
     
 
     try:
@@ -107,6 +108,8 @@ def product_overview(request, id):
         "no_of_cart_items":no_of_cart_items,
 
         "cart": cart,
+
+        "product_images": product_images
 
         }
     
