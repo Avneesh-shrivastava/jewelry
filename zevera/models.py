@@ -57,3 +57,11 @@ class Cart(models.Model):
     product = models.CharField(max_length=100)
     price = models.FloatField()
     size = models.CharField(max_length=5,null=True,default=6)
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product_images/')
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
