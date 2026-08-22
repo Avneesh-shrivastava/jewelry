@@ -190,15 +190,21 @@ def cart(request):
     subtotal = sum(prod_prices)
     coupon_code = ''
     
-
+    
     if request.method =='POST':
         coupon_code = request.POST.get('coupon_code')
         coupon_code = coupon_code.upper()
-
+        if coupon_code == "GET20":
+            request.session['coupon_code'] = "GET20"
+        else:
+            request.session.pop('coupon_code', None)
+        return redirect('cart')
+        
+    coupon_code = request.session.get('coupon_code')
     discount = 0
     if coupon_code == "GET20":
-        discount = round(subtotal*0.20, 2)
-
+        discount = round(subtotal * 0.20, 2)
+    
     total_price = float(subtotal - discount)   
 
     context = {
@@ -208,16 +214,14 @@ def cart(request):
         "discount":discount,
         "total_price": total_price,
     }
-        
-
-    
-    
+     
     return render(request, 'cart.html',context)
 
 @login_required
 def remove_cart(request, rm_id):
     Cart.objects.filter(id=rm_id).delete()
     return redirect('cart')
+
 
 @login_required
 def update_cart(request, cart_id):
@@ -240,8 +244,9 @@ def update_cart(request, cart_id):
                 'error': 'Maximum quantity is 10'
             })
 
-        cart = get_object_or_404(Cart, id=cart_id)
 
+        #This is where the data get's updated in the Postgresql
+        cart = get_object_or_404(Cart, id=cart_id)
         cart.quantity = quantity
         cart.save()
 
