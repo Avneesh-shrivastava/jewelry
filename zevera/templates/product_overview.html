@@ -389,16 +389,21 @@
 
       <!-- Gallery -->
       <div class="pdp-gallery">
-        <div class="gallery-main" id="galleryMain"><img src="{{product.image.url}}"></div>
-        
-        <div class="gallery-thumbs">
-          <div class="thumb t1 is-active" onclick="setGallery(this,'💍','t1')"></div>
-          <div class="thumb t2" onclick="setGallery(this,'✨','t2')"></div>
-          <div class="thumb t3" onclick="setGallery(this,'👐','t3')"></div>
-          <div class="thumb t4" onclick="setGallery(this,'📦','t4')"></div>
-        </div>
+  <div class="gallery-main" id="galleryMain">
+    <img src="{{ product.image.url }}" id="galleryMainImg">
+  </div>
 
-      </div>
+  <div class="gallery-thumbs">
+    <div class="thumb is-active" onclick="setGallery(this, '{{ product.image.url }}')">
+      <img src="{{ product.image.url }}" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    {% for img in product_images.image.all %}
+    <div class="thumb" onclick="setGallery(this, '{{ img.image.url }}')">
+      <img src="{{ img.image.url }}" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 
       <!-- Info -->
@@ -707,9 +712,8 @@ We accept returns within 7 days of delivery for eligible items. The {{product.ca
   </div>
 
   <script>
-    function setGallery(el, emoji, cls) {
-      document.getElementById('galleryMain').textContent = emoji;
-      document.getElementById('galleryMain').className = 'gallery-main ' + cls;
+    function setGallery(el, imageUrl) {
+      document.getElementById('galleryMainImg').src = imageUrl;
       document.querySelectorAll('.thumb').forEach(t => t.classList.remove('is-active'));
       el.classList.add('is-active');
     }
