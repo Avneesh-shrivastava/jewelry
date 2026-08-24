@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'zevera',
-    'cloudinary'
+    'cloudinary',
+    'rest_framework',
+    'api'
 ]
 
 
