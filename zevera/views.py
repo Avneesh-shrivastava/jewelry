@@ -8,6 +8,8 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
+
+
 def home_page(request):
     categories = Category.objects.all()
     cart = Cart.objects.all()
@@ -185,7 +187,7 @@ def add_to_cart(request, product_id):
 
     return redirect('product_overview', id=product_id)
 
-@login_required
+@login_required(login_url='/login_view/')
 def cart(request):
     cart_items = Cart.objects.all()
     no_of_cart_items = len(cart_items)
@@ -226,7 +228,7 @@ def remove_cart(request, rm_id):
     return redirect('cart')
 
 
-@login_required
+@login_required(login_url='/login/')
 def update_cart(request, cart_id):
 
     if request.method == 'POST':
