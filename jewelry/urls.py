@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from zevera.views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -34,4 +34,6 @@ urlpatterns = [
     path('cart/', cart, name='cart'),
     path('remove-cart/<int:rm_id>/', remove_cart, name='remove_cart'),
     path('update-cart/<int:cart_id>/', update_cart, name='update_cart'),
+    path('api/', include('api.urls')),
+    path('logout/', logout_view, name="logout"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
