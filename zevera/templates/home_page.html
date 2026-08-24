@@ -999,9 +999,9 @@
 {% load static %}
 
   <!-- Top announcement -->
-  <div class="announcement">
+  <!-- <div class="announcement">
     Free shipping on orders over <span>$150</span> &nbsp;|&nbsp; Complimentary gift wrapping
-  </div>
+  </div> -->
 
   <!-- Header -->
   <header class="header">
@@ -1033,6 +1033,17 @@
             <span class="cart-count">{{cart_items_no}}</span>
           {% endif %}
         </div>
+        
+        {% if user.is_authenticated %}
+        <a href="/logout"><button class="icon-btn" aria-label="Logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M15 4H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7"/>
+          <path d="M11 12h9"/>
+          <path d="M17 8l4 4-4 4"/>
+        {% endif %}
+    
+  </svg>
+</button></a>
         <label for="nav-toggle" class="menu-toggle" aria-label="Open menu">
           <span></span><span></span><span></span>
         </label>
