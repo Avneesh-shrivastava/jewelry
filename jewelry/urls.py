@@ -36,4 +36,5 @@ urlpatterns = [
     path('update-cart/<int:cart_id>/', update_cart, name='update_cart'),
     path('api/', include('api.urls')),
     path('logout/', logout_view, name="logout"),
+    path('checkout/', checkout, name="checkout"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
