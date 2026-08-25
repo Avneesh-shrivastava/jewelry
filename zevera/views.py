@@ -264,3 +264,25 @@ def update_cart(request, cart_id):
         'success': False,
         'error': 'Invalid request'
     })
+
+@login_required
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user)
+
+    if not cart_items.exists():
+        messages.info(request, "Your bag is empty.")
+        return redirect('cart')
+
+    subtotal = sum(item.price * item.quantity for item in cart_items)
+    shipping = 0
+    discount = 0
+    total = subtotal + shipping - discount
+
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'no_of_cart_items': cart_items.count(),
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'discount': discount,
+        'total': total,
+    })
