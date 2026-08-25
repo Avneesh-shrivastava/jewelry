@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 
 def home_page(request):
     categories = Category.objects.all()
-    cart = Cart.objects.all()
+    cart = Cart.objects.filter(user_id = request.user)
     cart_items_no = len(cart)
 
     context = {
@@ -28,7 +28,7 @@ def products(request, id):
     products = Product.objects.filter(category_id=id)
     category = Category.objects.get(id=id)
     extra = extra_info.objects.get(category_id=id)
-    cart = Cart.objects.all()
+    cart = Cart.objects.filter(user_id = request.user)
     cart_items_no = len(cart)
     context = {
         "products" : products,
@@ -47,7 +47,7 @@ def product_overview(request, id):
     people_reviewed = len(reviews)
     cart = Cart.objects.filter(products_id=id)
     print(cart)
-    no_of_cart_items = len(Cart.objects.all())
+    no_of_cart_items = len(Cart.objects.filter(user_id = request.user))
     product_images = ProductImage.objects.all()
     
 
@@ -148,9 +148,9 @@ def logout_view(request):
     logout(request)
     return redirect('home_page')
 
-from django.shortcuts import get_object_or_404, redirect
 
-@login_required
+
+@login_required(login_url='/login/')
 def add_to_cart(request, product_id):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
@@ -187,9 +187,9 @@ def add_to_cart(request, product_id):
 
     return redirect('product_overview', id=product_id)
 
-@login_required(login_url='/login_view/')
+@login_required(login_url='/login/')
 def cart(request):
-    cart_items = Cart.objects.all()
+    cart_items = Cart.objects.filter(user_id = request.user)
     no_of_cart_items = len(cart_items)
     prod_prices = cart_items.values_list('price', flat=True)
     subtotal = sum(prod_prices)
@@ -222,7 +222,7 @@ def cart(request):
      
     return render(request, 'cart.html',context)
 
-@login_required
+@login_required(login_url='/login/')
 def remove_cart(request, rm_id):
     Cart.objects.filter(id=rm_id).delete()
     return redirect('cart')
