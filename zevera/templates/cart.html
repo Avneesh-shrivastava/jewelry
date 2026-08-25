@@ -207,13 +207,14 @@
 </head>
 <body>
 
-  <div class="announcement">Free insured shipping over ₹15,000 · <span>Lifetime resizing on every ring</span></div>
+  <!-- <div class="announcement">Free insured shipping over ₹15,000 · <span>Lifetime resizing on every ring</span></div> -->
 
   <header class="header">
     <div class="container header-inner">
-      <a href="#" class="logo">Zevera <span>Jewellers</span></a>
+      <a href="/home-page" class="logo">Zevera <span>Jewellers</span></a>
       <nav class="nav-desktop">
         <ul>
+          <li><a href="/home-page">Home</a></li>
           <li><a href="/products/1">Rings</a></li>
           <li><a href="/products/2">Necklaces</a></li>
           <li><a href="/products/3">Earrings</a></li>
@@ -267,6 +268,7 @@
       <div class="cart-items">
         
         {% for cart in cart_items %}
+        
         <div class="cart-item" data-cart-id="{{ cart.id }}">
           <div class="cart-item-img ci1">
             <a href="/product-overview/{{cart.products_id}}"><img src="{{cart.products.image.url}}" alt="{{ cart.product }}"></a>
@@ -297,6 +299,7 @@
             </div>
           </div>
         </div>
+        
         {% endfor %}
       </div>
 
