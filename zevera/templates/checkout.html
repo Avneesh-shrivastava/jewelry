@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif; font-weight: 400; color: var(--ink);
+      background: var(--cream); line-height: 1.6; overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Header (shared) */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); }
+    .logo span { color: var(--gold); }
+    .checkout-lock { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+    .checkout-lock svg { width: 14px; height: 14px; color: var(--gold-dark); }
+
+    /* Breadcrumb + title */
+    .breadcrumb { padding: 1rem 0 0; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink-soft); text-transform: uppercase; }
+    .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.5; }
+    .checkout-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.75rem, 5vw, 2.4rem); font-weight: 600; padding: 1rem 0 0.25rem; }
+    .checkout-subtitle { font-size: 0.8rem; color: var(--ink-soft); padding-bottom: 1.5rem; }
+
+    /* Layout */
+    .checkout-section { padding: 0 0 4rem; }
+    .checkout-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+
+    /* Panel — shared card shell for each step */
+    .panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .panel-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1.25rem; }
+    .panel-eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dark); }
+    .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; }
+
+    /* Form fields */
+    .field-row { display: grid; grid-template-columns: 1fr; gap: 0.9rem; margin-bottom: 0.9rem; }
+    .field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .field label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft); }
+    .field input, .field select {
+      padding: 0.75rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius);
+      font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color var(--transition); background: var(--white); color: var(--ink);
+    }
+    .field input:focus, .field select:focus { border-color: var(--gold); }
+
+    /* Payment method chips (mirrors ring-size chip pattern) */
+    .payment-options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .payment-chip {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem;
+      border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all var(--transition);
+    }
+    .payment-chip:hover { border-color: var(--gold); }
+    .payment-chip input[type="radio"] { accent-color: var(--gold-dark); width: 16px; height: 16px; flex: none; }
+    .payment-chip.is-active { border-color: var(--ink); background: var(--cream); }
+    .payment-chip-label { font-size: 0.82rem; font-weight: 600; }
+    .payment-chip-note { font-size: 0.7rem; color: var(--ink-soft); margin-top: 0.1rem; }
+
+    .card-fields { display: none; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px dashed var(--border); }
+    .card-fields.is-visible { display: grid; }
+    .card-fields .field.full { grid-column: 1 / -1; }
+
+    /* Order review — line items inside the order summary panel */
+    .review-item { display: flex; gap: 0.8rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .review-item:last-of-type { border-bottom: none; }
+    .review-item-img { width: 56px; height: 56px; border-radius: var(--radius); overflow: hidden; flex: none; background: linear-gradient(145deg, #faf8f5, #e8dcc8); }
+    .review-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .review-item-body { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; }
+    .review-item-name { font-size: 0.8rem; font-weight: 600; line-height: 1.3; }
+    .review-item-meta { font-size: 0.68rem; color: var(--ink-soft); }
+    .review-item-price { font-size: 0.8rem; font-weight: 600; color: var(--gold-dark); white-space: nowrap; align-self: center; }
+
+    /* Order summary (matches cart page) */
+    .order-summary { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; }
+    .summary-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 0.75rem; }
+    .summary-row span:last-child { color: var(--ink); font-weight: 500; }
+    .summary-row.discount span:last-child { color: var(--rose); }
+    .summary-divider { border-top: 1px solid var(--border); margin: 1rem 0; }
+    .summary-total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
+    .summary-total-label { font-size: 0.85rem; font-weight: 600; }
+    .summary-total-value { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 1.5rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition); width: 100%; }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); }
+    .btn-primary:disabled { background: var(--border); color: var(--ink-soft); cursor: not-allowed; }
+
+    .summary-note { font-size: 0.68rem; color: var(--ink-soft); text-align: center; margin-top: 0.85rem; line-height: 1.5; }
+
+    .badge-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-top: 1.5rem; }
+    .badge-item {
+      background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.65rem 0.4rem; text-align: center; font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.02em; color: var(--ink-soft); line-height: 1.4;
+    }
+    .badge-item span { display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+
+    /* Form error state */
+    .field.has-error input { border-color: var(--rose); }
+    .field-error { font-size: 0.68rem; color: var(--rose); display: none; }
+    .field.has-error .field-error { display: block; }
+
+    /* Footer (shared) */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 3rem 0 1.5rem; margin-top: 1rem; }
+    .footer-bottom { border-top: 1px solid rgba(250, 248, 245, 0.1); padding-top: 1.5rem; text-align: center; }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      .field-row.two-col { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Desktop */
+    @media (min-width: 768px) {
+      .checkout-grid { grid-template-columns: 1.6fr 1fr; gap: 3rem; align-items: start; }
+      .order-summary { position: sticky; top: 90px; }
+      .checkout-section { padding-bottom: 5rem; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Zevera <span>Jewellers</span></a>
+      <div class="checkout-lock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        Secure Checkout
+      </div>
+    </div>
+  </header>
+
+  <div class="container breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/cart">Bag</a><span class="sep">/</span>Checkout
+  </div>
+
+  <div class="container">
+    <h1 class="checkout-title">Checkout</h1>
+    <p class="checkout-subtitle">{{ no_of_cart_items }} item{{ no_of_cart_items|pluralize }} · Review and place your order</p>
+  </div>
+
+  <section class="checkout-section">
+    <div class="container checkout-grid">
+
+      <!-- Left: form -->
+      <form method="POST" action="" id="checkoutForm">
+        {% csrf_token %}
+
+        <!-- Contact -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-eyebrow">Contact</span>
+          </div>
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="full_name" value="{{ request.user.get_full_name|default:'' }}" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="10-digit mobile number" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="{{ request.user.email|default:'' }}" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping address -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-eyebrow">Deliver To</span>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="address1">Address</label>
+              <input type="text" id="address1" name="address_line1" placeholder="Flat, house no., building, street" required>
+            </div>
+          </div>
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" required>
+            </div>
+            <div class="field">
+              <label for="state">State</label>
+              <input type="text" id="state" name="state" required>
+            </div>
+          </div>
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="pincode">Pincode</label>
+              <input type="text" id="pincode" name="pincode" maxlength="6" inputmode="numeric" required>
+            </div>
+            <div class="field">
+              <label for="landmark">Landmark (optional)</label>
+              <input type="text" id="landmark" name="landmark">
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-eyebrow">Payment</span>
+          </div>
+          <div class="payment-options">
+            <label class="payment-chip is-active" onclick="selectPayment(this,'razorpay')">
+              <input type="radio" name="payment_method" value="razorpay" checked>
+              <div>
+                <div class="payment-chip-label">Card / UPI / Netbanking</div>
+                <div class="payment-chip-note">Secured by Razorpay</div>
+              </div>
+            </label>
+            <label class="payment-chip" onclick="selectPayment(this,'cod')">
+              <input type="radio" name="payment_method" value="cod">
+              <div>
+                <div class="payment-chip-label">Cash on Delivery</div>
+                <div class="payment-chip-note">Pay when your order arrives</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <!-- Right: order summary -->
+      <div class="order-summary">
+        <h3 class="summary-title">Order Summary</h3>
+
+        {% for cart in cart_items %}
+        <div class="review-item">
+          <div class="review-item-img"><img src="{{ cart.products.image.url }}" alt="{{ cart.product }}"></div>
+          <div class="review-item-body">
+            <span class="review-item-name">{{ cart.product }}</span>
+            <span class="review-item-meta">Size {{ cart.size }} · Qty {{ cart.quantity }}</span>
+          </div>
+          <span class="review-item-price">₹{{ cart.price }}</span>
+        </div>
+        {% endfor %}
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row"><span>Subtotal</span><span>₹{{ subtotal }}</span></div>
+        <div class="summary-row"><span>Shipping</span><span>{% if shipping %}₹{{ shipping }}{% else %}Free{% endif %}</span></div>
+        <div class="summary-row discount"><span>Discount</span><span>−₹{{ discount|default:0 }}</span></div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <span class="summary-total-label">Total</span>
+          <span class="summary-total-value">₹{{ total }}</span>
+        </div>
+
+        <button type="submit" form="checkoutForm" class="btn btn-primary">Place Order</button>
+        <p class="summary-note">Inclusive of all taxes. Insured shipping included on every order.</p>
+
+        <div class="badge-row">
+          <div class="badge-item"><span>🚚</span>Insured Shipping</div>
+          <div class="badge-item"><span>💍</span>Lifetime Resizing</div>
+          <div class="badge-item"><span>↩</span>7-Day Returns</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>© 2026 Maison Aurée. All rights reserved. · Insured shipping · Lifetime resizing</p>
+    </div>
+  </footer>
+
+  <script>
+    function selectPayment(el) {
+      document.querySelectorAll('.payment-chip').forEach(c => c.classList.remove('is-active'));
+      el.classList.add('is-active');
+    }
+  </script>
+
+</body>
+</html>
