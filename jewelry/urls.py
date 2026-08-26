@@ -39,4 +39,5 @@ urlpatterns = [
     path('checkout/', checkout, name="checkout"),
     path('checkout/', checkout, name='checkout'),
     path('place-order/', place_order, name='place_order'),
+    path('razorpay-payment/<int:order_id>/', views.razorpay_payment, name='razorpay_payment'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
