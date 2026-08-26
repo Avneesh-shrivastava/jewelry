@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 
 
@@ -286,3 +287,73 @@ def checkout(request):
         'discount': discount,
         'total': total,
     })
+
+@login_required
+def place_order(request):
+    if request.method != 'POST':
+        return redirect('checkout')
+
+    cart_items = Cart.objects.filter(user=request.user)
+    if not cart_items.exists():
+        messages.error(request, "Your bag is empty.")
+        return redirect('cart')
+
+    full_name = request.POST.get('full_name', '').strip()
+    phone = request.POST.get('phone', '').strip()
+    email = request.POST.get('email', '').strip()
+    address_line1 = request.POST.get('address_line1', '').strip()
+    city = request.POST.get('city', '').strip()
+    state = request.POST.get('state', '').strip()
+    pincode = request.POST.get('pincode', '').strip()
+    landmark = request.POST.get('landmark', '').strip()
+    payment_method = request.POST.get('payment_method', '')
+
+    required_fields = [full_name, phone, email, address_line1, city, state, pincode, payment_method]
+    if not all(required_fields):
+        messages.error(request, "Please fill in all required fields.")
+        return redirect('checkout')
+
+    if payment_method not in ('razorpay', 'cod'):
+        messages.error(request, "Please select a valid payment method.")
+        return redirect('checkout')
+
+    subtotal = sum(item.price * item.quantity for item in cart_items)
+    total = subtotal  # add shipping/discount logic here if needed
+
+    with transaction.atomic():
+        order = Order.objects.create(
+            user=request.user,
+            full_name=full_name,
+            phone=phone,
+            email=email,
+            address_line1=address_line1,
+            city=city,
+            state=state,
+            pincode=pincode,
+            landmark=landmark,
+            payment_method=payment_method,
+            status='pending',
+            subtotal=subtotal,
+            total=total,
+        )
+
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.products,
+                product_name=item.product,
+                price=item.price,
+                quantity=item.quantity,
+                size=item.size,
+            )
+
+        cart_items.delete()
+
+    if payment_method == 'cod':
+        order.status = 'confirmed'
+        order.save()
+        return redirect('order_confirmation', order_id=order.id)
+
+    # razorpay: redirect to a payment view that creates the Razorpay order
+    # and renders their checkout widget, then verifies payment on callback
+    return redirect('razorpay_payment', order_id=order.id)
