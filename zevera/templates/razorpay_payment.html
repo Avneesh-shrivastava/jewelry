@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Processing Payment — Maison Aurée</title>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  body { font-family: 'Montserrat', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #faf8f5; color: #4a4a4a; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+  <p>Redirecting to secure payment...</p>
+
+  <script>
+    function getCookie(name) {
+      const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return match ? match.pop() : '';
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    const options = {
+      key: "{{ razorpay_key_id }}",
+      amount: "{{ amount_paise }}",
+      currency: "INR",
+      name: "Maison Aurée",
+      description: "Order #{{ order.id }}",
+      order_id: "{{ razorpay_order_id }}",
+      handler: function (response) {
+        fetch("{% url 'verify_payment' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": csrftoken
+          },
+          body: new URLSearchParams({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location = data.redirect_url;
+          } else {
+            alert("Payment verification failed. Please contact support if the amount was deducted.");
+            window.location = "/checkout/";
+          }
+        })
+        .catch(() => {
+          alert("Something went wrong verifying your payment.");
+          window.location = "/checkout/";
+        });
+      },
+      prefill: {
+        name: "{{ order.full_name }}",
+        email: "{{ order.email }}",
+        contact: "{{ order.phone }}"
+      },
+      theme: { color: "#c9a962" },
+      modal: {
+        ondismiss: function () {
+          window.location = "/checkout/";
+        }
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  </script>
+</body>
+</html>
