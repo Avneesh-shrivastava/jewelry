@@ -10,6 +10,10 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 import razorpay
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+import hmac
+import hashlib
+from django.db import transaction
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -361,3 +365,63 @@ def place_order(request):
     # razorpay: redirect to a payment view that creates the Razorpay order
     # and renders their checkout widget, then verifies payment on callback
     return redirect('razorpay_payment', order_id=order.id)
+
+
+@login_required
+def razorpay_payment(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.status != 'pending':
+        messages.info(request, "This order has already been processed.")
+        return redirect('order_confirmation', order_id=order.id)
+
+    # Razorpay needs the amount in paise (smallest currency unit), as an integer
+    amount_paise = int(order.total * 100)
+
+    razorpay_order = razorpay_client.order.create({
+        'amount': amount_paise,
+        'currency': 'INR',
+        'payment_capture': 1,
+        'receipt': f'order_{order.id}',
+    })
+
+    order.razorpay_order_id = razorpay_order['id']
+    order.save()
+
+    return render(request, 'razorpay_payment.html', {
+        'order': order,
+        'razorpay_order_id': razorpay_order['id'],
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+        'amount_paise': amount_paise,
+    })
+
+@csrf_exempt
+@login_required
+def verify_payment(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+    razorpay_order_id = request.POST.get('razorpay_order_id')
+    razorpay_payment_id = request.POST.get('razorpay_payment_id')
+    razorpay_signature = request.POST.get('razorpay_signature')
+
+    order = get_object_or_404(Order, razorpay_order_id=razorpay_order_id, user=request.user)
+
+    # Verify the signature ourselves — never trust the frontend's word that payment succeeded
+    generated_signature = hmac.new(
+        key=settings.RAZORPAY_KEY_SECRET.encode(),
+        msg=f'{razorpay_order_id}|{razorpay_payment_id}'.encode(),
+        digestmod=hashlib.sha256
+    ).hexdigest()
+
+    if generated_signature != razorpay_signature:
+        order.status = 'cancelled'
+        order.save()
+        return JsonResponse({'success': False, 'error': 'Payment verification failed'}, status=400)
+
+    order.razorpay_payment_id = razorpay_payment_id
+    order.razorpay_signature = razorpay_signature
+    order.status = 'paid'
+    order.save()
+
+    return JsonResponse({'success': True, 'redirect_url': f'/order-confirmation/{order.id}/'})
