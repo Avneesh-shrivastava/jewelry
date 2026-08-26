@@ -65,3 +65,40 @@ class ProductImage(models.Model):
 
     class Meta:
         ordering = ['order']
+
+class Order(models.Model):
+    PAYMENT_CHOICES = [
+        ('razorpay', 'Card / UPI / Netbanking'),
+        ('cod', 'Cash on Delivery'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('confirmed', 'Confirmed'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    address_line1 = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
+    landmark = models.CharField(max_length=255, blank=True, null=True)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    subtotal = models.FloatField()
+    total = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)
+    product_name = models.CharField(max_length=100)
+    price = models.FloatField()
+    quantity = models.IntegerField()
+    size = models.CharField(max_length=5, null=True, blank=True)
