@@ -172,7 +172,7 @@
     <div class="container checkout-grid">
 
       <!-- Left: form -->
-      <form method="POST" action="" id="checkoutForm">
+      <form method="POST" action="{% url 'place_order' %}" id="checkoutForm">
         {% csrf_token %}
 
         <!-- Contact -->
