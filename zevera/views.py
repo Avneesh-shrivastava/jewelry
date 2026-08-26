@@ -8,6 +8,10 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+import razorpay
+from django.conf import settings
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
 
