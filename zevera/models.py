@@ -94,6 +94,9 @@ class Order(models.Model):
     subtotal = models.FloatField()
     total = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
