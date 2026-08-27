@@ -41,4 +41,6 @@ urlpatterns = [
     path('place-order/', place_order, name='place_order'),
     path('razorpay-payment/<int:order_id>/',razorpay_payment, name='razorpay_payment'),
     path('verify-payment/', verify_payment, name='verify_payment'),
+    path('order-confirmation/<int:order_id>/', order_confirmation, name='order_confirmation'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
