@@ -276,6 +276,7 @@ def update_cart(request, cart_id):
 
 @login_required
 def checkout(request):
+
     cart_items = Cart.objects.filter(user=request.user)
 
     if not cart_items.exists():
@@ -425,3 +426,4 @@ def verify_payment(request):
     order.save()
 
     return JsonResponse({'success': True, 'redirect_url': f'/order-confirmation/{order.id}/'})
+
