@@ -211,6 +211,7 @@ def cart(request):
     prod_prices = cart_items.values_list('price', flat=True)
     subtotal = sum(prod_prices)
     coupon_code = ''
+    products = Product.objects.order_by('-id')[:5]
     
     
     if request.method =='POST':
@@ -236,6 +237,7 @@ def cart(request):
         "discount":discount,
         "total_price": total_price,
         "coupon_type" : coupon_code,
+        "products" : products
     }
      
     return render(request, 'cart.html',context)
