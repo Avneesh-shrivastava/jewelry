@@ -346,23 +346,20 @@
         <br>
 
       {% if coupon_type == "GET20" %}
-<div style="display:flex; align-items:center; gap:0.7rem; background:linear-gradient(135deg,#faf6ea,#f2ead4); border:1px solid #c9a962; border-radius:4px; padding:0.7rem 0.9rem; font-family:'Montserrat',sans-serif;">
-  <div style="width:26px; height:26px; border-radius:50%; background:#c9a962; display:flex; align-items:center; justify-content:center; flex:none;">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><path d="M20 6 9 17l-5-5"/></svg>
-  </div>
-  <span style="font-size:0.8rem; color:#1a1a1a; flex:1;">
-    <strong>SAVE20</strong> applied — <span style="color:#a88b4a; font-weight:600;">20% off</span>
-  </span>
-  <form action="{% url 'remove_coupon' %}" method="POST" style="margin:0;">
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    <button type="submit" style="background:none; border:none; cursor:pointer; color:#4a4a4a; font-size:0.7rem; text-decoration:underline; text-underline-offset:3px; padding:0; font-family:inherit;">Remove</button>
-  </form>
-</div>
+          <div style="display:flex; align-items:center; gap:0.7rem; background:linear-gradient(135deg,#faf6ea,#f2ead4); border:1px solid #c9a962; border-radius:4px; padding:0.7rem 0.9rem; font-family:'Montserrat',sans-serif;">
+            <div style="width:26px; height:26px; border-radius:50%; background:#c9a962; display:flex; align-items:center; justify-content:center; flex:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <span style="font-size:0.8rem; color:#1a1a1a; flex:1;">
+              <strong>GET20</strong> applied — <span style="color:#a88b4a; font-weight:600;">20% off</span>
+            </span>
+            <form action="{% url 'remove_coupon' %}" method="POST" style="margin:0;">
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+              <button type="submit" style="background:none; border:none; cursor:pointer; color:#4a4a4a; font-size:0.7rem; text-decoration:underline; text-underline-offset:3px; padding:0; font-family:inherit;">Remove</button>
+            </form>
+          </div>
       {% endif %}
       </div>
-
-
-
     </div>
   </section>
 
@@ -373,12 +370,16 @@
         <p class="section-label">Styled Together</p>
         <h2 class="section-title">You Might Also Like</h2>
       </div>
+
+
       <div class="card-strip">
+        {% for product in products %}
         <div class="mini-card">
-          <div class="mini-card-img" style="background:linear-gradient(145deg,#f2ece0,#cbb896);">💍</div>
-          <div class="mini-card-info"><h4>Ora Signet</h4><p class="mini-card-price">₹42,500</p></div>
+          <div class="mini-card-img" style="background:linear-gradient(145deg,#f2ece0,#cbb896);"><img src="{{product.image.url}}"></div>
+          <div class="mini-card-info"><h4>{{product.name}}</h4><p class="mini-card-price">₹{{product.price}}</p></div>
         </div>
-        <div class="mini-card">
+        {% endfor %}
+        <!-- <div class="mini-card">
           <div class="mini-card-img" style="background:linear-gradient(145deg,#eae6e0,#b9ae9c);">💍</div>
           <div class="mini-card-info"><h4>Thistle Band</h4><p class="mini-card-price">₹11,600</p></div>
         </div>
@@ -389,7 +390,7 @@
         <div class="mini-card">
           <div class="mini-card-img" style="background:linear-gradient(145deg,#efe6e8,#d9a9b2);">💍</div>
           <div class="mini-card-info"><h4>Garnet Bezel Ring</h4><p class="mini-card-price">₹28,400</p></div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
