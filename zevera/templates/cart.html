@@ -346,15 +346,18 @@
         <br>
 
       {% if coupon_type == "GET20" %}
-        <div style="display:flex; align-items:center; gap:0.7rem; background:linear-gradient(135deg,#faf6ea,#f2ead4); border:1px solid #c9a962; border-radius:4px; padding:0.7rem 0.9rem; font-family:'Montserrat',sans-serif;">
-          <div style="width:26px; height:26px; border-radius:50%; background:#c9a962; display:flex; align-items:center; justify-content:center; flex:none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><path d="M20 6 9 17l-5-5"/></svg>
-          </div>
-          <span style="font-size:0.8rem; color:#1a1a1a;">
-            <strong>GET20</strong> applied — <span style="color:#a88b4a; font-weight:600;">20% off</span>
-          </span>
-          
-        </div>
+<div style="display:flex; align-items:center; gap:0.7rem; background:linear-gradient(135deg,#faf6ea,#f2ead4); border:1px solid #c9a962; border-radius:4px; padding:0.7rem 0.9rem; font-family:'Montserrat',sans-serif;">
+  <div style="width:26px; height:26px; border-radius:50%; background:#c9a962; display:flex; align-items:center; justify-content:center; flex:none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><path d="M20 6 9 17l-5-5"/></svg>
+  </div>
+  <span style="font-size:0.8rem; color:#1a1a1a; flex:1;">
+    <strong>SAVE20</strong> applied — <span style="color:#a88b4a; font-weight:600;">20% off</span>
+  </span>
+  <form action="{% url 'remove_coupon' %}" method="POST" style="margin:0;">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <button type="submit" style="background:none; border:none; cursor:pointer; color:#4a4a4a; font-size:0.7rem; text-decoration:underline; text-underline-offset:3px; padding:0; font-family:inherit;">Remove</button>
+  </form>
+</div>
       {% endif %}
       </div>
 
