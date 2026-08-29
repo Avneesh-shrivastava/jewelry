@@ -47,7 +47,9 @@ def products(request, id):
         cart = Cart.objects.filter(user = request.user)
         cart_items_no = len(cart)
     else:
-        return redirect('/login')
+        cart = []
+        cart_items_no = 0
+        
     context = {
         "products" : products,
         'category' : category,
@@ -65,7 +67,11 @@ def product_overview(request, id):
     people_reviewed = len(reviews)
     cart = Cart.objects.filter(products_id=id)
     print(cart)
-    no_of_cart_items = len(Cart.objects.filter(user_id = request.user))
+    if request.user.is_authenticated:
+        no_of_cart_items = len(Cart.objects.filter(user = request.user))
+    else:
+        no_of_cart_items = 0
+
     product_images = ProductImage.objects.all()
     
 
@@ -161,12 +167,9 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-
 def logout_view(request):
     logout(request)
     return redirect('home_page')
-
-
 
 @login_required(login_url='/login/')
 def add_to_cart(request, product_id):
@@ -176,8 +179,6 @@ def add_to_cart(request, product_id):
         price = request.POST.get('prod_price')
         size = request.POST.get('size',6)
  
-        
-
         print(size)
         print(type(product))
 
@@ -207,7 +208,7 @@ def add_to_cart(request, product_id):
 
 @login_required(login_url='/login/')
 def cart(request):
-    cart_items = Cart.objects.filter(user_id = request.user)
+    cart_items = Cart.objects.filter(user = request.user)
     no_of_cart_items = len(cart_items)
     prod_prices = cart_items.values_list('price', flat=True)
     subtotal = sum(prod_prices)
