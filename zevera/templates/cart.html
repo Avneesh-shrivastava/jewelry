@@ -251,7 +251,7 @@
   </header>
 
   <div class="container breadcrumb">
-    <a href="#">Home</a><span class="sep">/</span>Shopping Bag
+    <a href="/">Home</a><span class="sep">/</span>Shopping Bag
   </div>
 
   <div class="container">
@@ -311,7 +311,14 @@
       </div>
       </form>
 
+
+
       <a href="/products/1" class="continue-shopping">← Continue Shopping</a>
+
+
+
+
+
 
       <!-- Summary -->
       <div class="order-summary">
@@ -336,7 +343,21 @@
           <div class="badge-item"><span>💍</span>Lifetime Resizing</div>
           <div class="badge-item"><span>↩</span>7-Day Returns</div>
         </div>
+        <br>
+
+      {% if coupon_type == "GET20" %}
+        <div style="display:flex; align-items:center; gap:0.7rem; background:linear-gradient(135deg,#faf6ea,#f2ead4); border:1px solid #c9a962; border-radius:4px; padding:0.7rem 0.9rem; font-family:'Montserrat',sans-serif;">
+          <div style="width:26px; height:26px; border-radius:50%; background:#c9a962; display:flex; align-items:center; justify-content:center; flex:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <span style="font-size:0.8rem; color:#1a1a1a;">
+            <strong>GET20</strong> applied — <span style="color:#a88b4a; font-weight:600;">20% off</span>
+          </span>
+        </div>
+      {% endif %}
       </div>
+
+
 
     </div>
   </section>
