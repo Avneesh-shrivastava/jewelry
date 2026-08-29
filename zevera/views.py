@@ -200,8 +200,6 @@ def add_to_cart(request, product_id):
             # current_obj.price = current_obj.price * current_obj.quantity
             # current_obj.save()   
         
-
-
         print(f"Adding {quantity} of {product.name} to cart worth rs. {price}")  # temporary, just to confirm it's working
 
     return redirect('product_overview', id=product_id)
@@ -442,3 +440,10 @@ def verify_payment(request):
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'order_confirmation.html', {'order': order})
+
+@login_required
+def remove_coupon(request):
+    if request.method == 'POST':
+        if 'coupon_code' in request.session:
+            del request.session['coupon_code']
+    return redirect('cart')
