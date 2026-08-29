@@ -21,8 +21,13 @@ razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZOR
 
 def home_page(request):
     categories = Category.objects.all()
-    cart = Cart.objects.filter(user_id = request.user)
-    cart_items_no = len(cart)
+    global cart_items_no
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
+        cart_items_no = cart.count()
+    else:
+        cart = []
+        cart_items_no = 0
 
     context = {
         'categories' : categories,
@@ -37,8 +42,12 @@ def products(request, id):
     products = Product.objects.filter(category_id=id)
     category = Category.objects.get(id=id)
     extra = extra_info.objects.get(category_id=id)
-    cart = Cart.objects.filter(user_id = request.user)
-    cart_items_no = len(cart)
+
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user = request.user)
+        cart_items_no = len(cart)
+    else:
+        return redirect('/login')
     context = {
         "products" : products,
         'category' : category,
@@ -227,6 +236,7 @@ def cart(request):
         "subtotal":subtotal,
         "discount":discount,
         "total_price": total_price,
+        "coupon_type" : coupon_code,
     }
      
     return render(request, 'cart.html',context)
