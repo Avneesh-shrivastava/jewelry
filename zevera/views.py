@@ -273,7 +273,9 @@ def update_cart(request, cart_id):
         #This is where the data get's updated in the Postgresql
         cart = get_object_or_404(Cart, id=cart_id)
         cart.quantity = quantity
+        cart.price =  cart.price * cart.quantity 
         cart.save()
+        
 
         return JsonResponse({
             'success': True,
@@ -284,6 +286,7 @@ def update_cart(request, cart_id):
         'success': False,
         'error': 'Invalid request'
     })
+    
 
 @login_required
 def checkout(request):
