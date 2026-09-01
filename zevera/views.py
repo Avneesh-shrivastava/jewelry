@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 import hmac
 import hashlib
 from django.db import transaction
+from django.db.models import Count
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -21,6 +22,12 @@ razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZOR
 
 def home_page(request):
     categories = Category.objects.all()
+    best_sellers = OrderItem.objects.values('product_id')
+    best_sellers = best_sellers.annotate(count=Count('product_id'))
+    best_sellers = best_sellers.order_by('-count').values()
+    for i in best_sellers:
+        print(f"{i.product.name}")
+
     global cart_items_no
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=request.user)
