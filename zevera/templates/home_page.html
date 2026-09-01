@@ -1167,6 +1167,7 @@
         <h2 class="section-title">Best Sellers</h2>
       </div>
       <div class="product-grid">
+        {% for products in best_sellers %}
         <article class="product-card">
           <div class="product-image">
             <div class="product-image-bg p1">💍</div>
@@ -1174,12 +1175,13 @@
             <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
           </div>
           <div class="product-info">
-            <h3>Celestial Diamond Ring</h3>
+            <h3>{{products.product.name}}</h3>
             <p class="material">18K White Gold · 0.5ct Diamond</p>
             <p class="product-price">$1,280</p>
           </div>
         </article>
-        <article class="product-card">
+        {% endfor %}
+        <!-- <article class="product-card">
           <div class="product-image">
             <div class="product-image-bg p2">📿</div>
             <span class="product-badge new">New</span>
@@ -1212,7 +1214,7 @@
             <p class="material">Platinum · 2ct Total Weight</p>
             <p class="product-price">$2,450</p>
           </div>
-        </article>
+        </article> -->
       </div>
     </div>
   </section>
