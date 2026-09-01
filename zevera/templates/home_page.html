@@ -1168,18 +1168,18 @@
       </div>
       <div class="product-grid">
         {% for product in best_sellers %}
-        <article class="product-card">
+        <a href="/product-overview/{{product.id}}"><article class="product-card">
           <div class="product-image">
-            <div class="product-image-bg p1">💍</div>
+            <div class="product-image-bg p1"><img src="{{product.image.url}}"></div>
             <span class="product-badge">Bestseller</span>
             <button class="product-wishlist" aria-label="Add to wishlist">♡</button>
           </div>
           <div class="product-info">
             <h3>{{product.name}}</h3>
-            <p class="material">18K White Gold · 0.5ct Diamond</p>
             <p class="product-price">$1,280</p>
           </div>
         </article>
+        </a>
         {% endfor %}
         <!-- <article class="product-card">
           <div class="product-image">
