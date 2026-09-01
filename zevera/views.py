@@ -26,6 +26,10 @@ def home_page(request):
     best_sellers = best_sellers.annotate(count=Count('product_id'))
     best_sellers = best_sellers.order_by('-count')
     print(best_sellers)
+    
+    products = Product.objects.filter( id__in=[item['product_id'] for item in best_sellers] )
+    print(products)
+    
 
 
     global cart_items_no
@@ -39,7 +43,7 @@ def home_page(request):
     context = {
         'categories' : categories,
         'cart_items_no' : cart_items_no,
-        'best_sellers': best_sellers,
+        'best_sellers': products,
     }
     return render(request, 'home_page.html',context)
 
