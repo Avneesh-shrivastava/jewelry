@@ -24,9 +24,9 @@ def home_page(request):
     categories = Category.objects.all()
     best_sellers = OrderItem.objects.values('product_id')
     best_sellers = best_sellers.annotate(count=Count('product_id'))
-    best_sellers = best_sellers.order_by('-count').values()
-    for i in best_sellers:
-        print(f"{i.product.name}")
+    best_sellers = best_sellers.order_by('-count')
+    print(best_sellers)
+
 
     global cart_items_no
     if request.user.is_authenticated:
@@ -38,7 +38,8 @@ def home_page(request):
 
     context = {
         'categories' : categories,
-        'cart_items_no' : cart_items_no
+        'cart_items_no' : cart_items_no,
+        'best_sellers': best_sellers,
     }
     return render(request, 'home_page.html',context)
 
