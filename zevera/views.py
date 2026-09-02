@@ -262,42 +262,48 @@ def remove_cart(request, rm_id):
 
 @login_required(login_url='/login/')
 def update_cart(request, cart_id):
-
     if request.method == 'POST':
+        quantity = int(request.POST.get('quantity'))
+        cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+        cart_item.quantity = quantity
+        cart_item.save()
+    return render(request, 'partials/cart_item.html', {'cart': cart_item})
 
-        data = json.loads(request.body)
+    # if request.method == 'POST':
 
-        quantity = int(data.get('quantity'))
+    #     data = json.loads(request.body)
 
-        if quantity < 1:
-            return JsonResponse({
-                'success': False,
-                'error': 'Quantity must be at least 1'
-            })
+    #     quantity = int(data.get('quantity'))
 
-        if quantity > 10:
-            return JsonResponse({
-                'success': False,
-                'error': 'Maximum quantity is 10'
-            })
+    #     if quantity < 1:
+    #         return JsonResponse({
+    #             'success': False,
+    #             'error': 'Quantity must be at least 1'
+    #         })
+
+    #     if quantity > 10:
+    #         return JsonResponse({
+    #             'success': False,
+    #             'error': 'Maximum quantity is 10'
+    #         })
 
 
-        #This is where the data get's updated in the Postgresql
-        cart = get_object_or_404(Cart, id=cart_id)
-        cart.quantity = quantity
-        cart.price =  cart.price * cart.quantity 
-        cart.save()
+    #     #This is where the data get's updated in the Postgresql
+    #     cart = get_object_or_404(Cart, id=cart_id)
+    #     cart.quantity = quantity
+    #     cart.price =  cart.price * cart.quantity 
+    #     cart.save()
         
 
-        return JsonResponse({
-            'success': True,
-            'quantity': cart.quantity
-        })
+    #     return JsonResponse({
+    #         'success': True,
+    #         'quantity': cart.quantity
+    #     })
 
-    return JsonResponse({
-        'success': False,
-        'error': 'Invalid request'
-    })
+    # return JsonResponse({
+    #     'success': False,
+    #     'error': 'Invalid request'
+    # })
     
 
 @login_required
