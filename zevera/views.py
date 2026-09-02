@@ -268,7 +268,7 @@ def update_cart(request, cart_id):
         cart_item.quantity = quantity
         cart_item.price = cart_item.price * cart_item.quantity
         cart_item.save()
-    return render(request, 'partials/cart_item.html', {'cart': cart_item})
+    return render(request, 'partials/cart.html', {'cart': cart_item})
 
     # if request.method == 'POST':
 
