@@ -56,6 +56,7 @@ class Cart(models.Model):
     quantity = models.IntegerField()
     product = models.CharField(max_length=100)
     price = models.FloatField()
+    dynamic_price = models.FloatField(null=True)
     size = models.CharField(max_length=5,null=True,default=6)
 
 class ProductImage(models.Model):
