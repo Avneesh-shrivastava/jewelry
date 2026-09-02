@@ -266,6 +266,7 @@ def update_cart(request, cart_id):
         quantity = int(request.POST.get('quantity'))
         cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
         cart_item.quantity = quantity
+        cart_item.price = cart_item.price * cart_item.quantity
         cart_item.save()
     return render(request, 'partials/cart_item.html', {'cart': cart_item})
 
