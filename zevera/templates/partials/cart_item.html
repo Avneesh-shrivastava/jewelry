@@ -8,7 +8,7 @@
         <h3 class="cart-item-name">{{ cart.product }}</h3>
         <p class="cart-item-meta">Size {{ cart.size }}</p>
       </div>
-      <span class="cart-item-price">₹{{ cart.price|floatformat:0 }}</span>
+      <span class="cart-item-price">₹{{ cart.dynamic_price }}</span>
     </div>
     <div class="cart-item-bottom">
       <div class="qty-selector">
