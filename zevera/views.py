@@ -15,6 +15,8 @@ import hmac
 import hashlib
 from django.db import transaction
 from django.db.models import Count
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -220,7 +222,7 @@ def add_to_cart(request, product_id):
 def cart(request):
     cart_items = Cart.objects.filter(user = request.user)
     no_of_cart_items = len(cart_items)
-    prod_prices = cart_items.values_list('price', flat=True)
+    prod_prices = cart_items.values_list('dynamic_price', flat=True)
     subtotal = sum(prod_prices)
     coupon_code = ''
     products = Product.objects.order_by('-id')[:5]
@@ -268,43 +270,16 @@ def update_cart(request, cart_id):
         cart_item.quantity = quantity
         cart_item.dynamic_price = cart_item.price * cart_item.quantity
         cart_item.save()
-    return render(request, 'partials/cart_item.html', {'cart': cart_item})
 
-    # if request.method == 'POST':
+        cart_items = Cart.objects.filter(user=request.user)
+        cart_total = sum(c.dynamic_price for c in cart_items)
 
-    #     data = json.loads(request.body)
-
-    #     quantity = int(data.get('quantity'))
-
-    #     if quantity < 1:
-    #         return JsonResponse({
-    #             'success': False,
-    #             'error': 'Quantity must be at least 1'
-    #         })
-
-    #     if quantity > 10:
-    #         return JsonResponse({
-    #             'success': False,
-    #             'error': 'Maximum quantity is 10'
-    #         })
-
-
-    #     #This is where the data get's updated in the Postgresql
-    #     cart = get_object_or_404(Cart, id=cart_id)
-    #     cart.quantity = quantity
-    #     cart.price =  cart.price * cart.quantity 
-    #     cart.save()
         
 
-    #     return JsonResponse({
-    #         'success': True,
-    #         'quantity': cart.quantity
-    #     })
+    item_html = render_to_string('partials/cart_item.html', {'cart': cart_item}, request=request)
+    totals_html = render_to_string('partials/cart_totals_oob.html', {'cart_total': cart_total}, request=request)
 
-    # return JsonResponse({
-    #     'success': False,
-    #     'error': 'Invalid request'
-    # })
+    return HttpResponse(item_html + totals_html)
     
 
 @login_required

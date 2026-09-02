@@ -12,10 +12,14 @@
     </div>
     <div class="cart-item-bottom">
       <div class="qty-selector">
-        <input type="number" class="qty-input" name="quantity" value="{{ cart.quantity }}" min="1" max="10"
-          hx-post="{% url 'update_cart' cart.id %}" hx-trigger="change"
-          hx-target="closest .cart-item" hx-swap="outerHTML"
-          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        <input type="number" class="qty-input" 
+        name="quantity" 
+        value="{{ cart.quantity }}" min="1" max="10"
+        hx-post="{% url 'update_cart' cart.id %}" 
+        hx-trigger="change"
+        hx-target="closest .cart-item" 
+        hx-swap="outerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
       </div>
       <a href="/remove-cart/{{ cart.id }}" class="remove-link">Remove</a>
     </div>
