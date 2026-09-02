@@ -204,6 +204,7 @@
       .container { padding: 0 2rem; }
     }
 </style>
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body>
 
@@ -284,15 +285,18 @@
             <div class="cart-item-bottom">
               <div class="qty-selector">
                 <!-- <form action="" method="POST"> -->
-                  
-                <input
-                  type="number"
-                  class="qty-input"
-                  name="inc_dec_qty"
-                  data-cart-id="{{ cart.id }}"
-                  value="{{ cart.quantity|default:1 }}"
-                  min="1"
-                  max="10">
+                  <input
+                      type="number"
+                      class="qty-input"
+                      name="quantity"
+                      value="{{ cart.quantity }}"
+                      min="1"
+                      max="10"
+                      hx-post="{% url 'update_quantity' cart.id %}"
+                      hx-trigger="change"
+                      hx-target="closest .cart-item"
+                      hx-swap="outerHTML"
+                      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                   <!-- </form> -->
               </div>
               <a href="/remove-cart/{{ cart.id }}" class="remove-link">Remove</a>
