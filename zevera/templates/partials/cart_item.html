@@ -1,0 +1,23 @@
+<div class="cart-item" data-cart-id="{{ cart.id }}">
+  <div class="cart-item-img ci1">
+    <a href="/product-overview/{{ cart.products_id }}"><img src="{{ cart.products.image.url }}" alt="{{ cart.product }}"></a>
+  </div>
+  <div class="cart-item-body">
+    <div class="cart-item-top">
+      <div>
+        <h3 class="cart-item-name">{{ cart.product }}</h3>
+        <p class="cart-item-meta">Size {{ cart.size }}</p>
+      </div>
+      <span class="cart-item-price">₹{{ cart.price|floatformat:0 }}</span>
+    </div>
+    <div class="cart-item-bottom">
+      <div class="qty-selector">
+        <input type="number" class="qty-input" name="quantity" value="{{ cart.quantity }}" min="1" max="10"
+          hx-post="{% url 'update_quantity' cart.id %}" hx-trigger="change"
+          hx-target="closest .cart-item" hx-swap="outerHTML"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+      </div>
+      <a href="/remove-cart/{{ cart.id }}" class="remove-link">Remove</a>
+    </div>
+  </div>
+</div>
