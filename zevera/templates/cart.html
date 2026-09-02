@@ -266,45 +266,9 @@
     <div class="container cart-grid">
 
       <!-- Items — single wrapper OUTSIDE the loop so it doesn't fragment per item -->
-      <div class="cart-items">
-        
+      <div class="cart-items">  
         {% for cart in cart_items %}
           {% include 'partials/cart_item.html' %}
-        
-        <div class="cart-item" data-cart-id="{{ cart.id }}">
-          <div class="cart-item-img ci1">
-            <a href="/product-overview/{{cart.products_id}}"><img src="{{cart.products.image.url}}" alt="{{ cart.product }}"></a>
-          </div>
-          <div class="cart-item-body">
-            <div class="cart-item-top">
-              <div>
-                <h3 class="cart-item-name">{{ cart.product }}</h3>
-                <p class="cart-item-meta">Size {{ cart.size }}</p>
-              </div>
-              <span class="cart-item-price" data-unit-price="{{ cart.price }}">₹{{ cart.price }}</span>
-            </div>
-            <div class="cart-item-bottom">
-              <div class="qty-selector">
-                <!-- <form action="" method="POST"> -->
-                  <input
-                      type="number"
-                      class="qty-input"
-                      name="quantity"
-                      value="{{ cart.quantity }}"
-                      min="1"
-                      max="10"
-                      hx-post="{% url 'update_cart' cart.id %}"
-                      hx-trigger="change"
-                      hx-target="closest .cart-item"
-                      hx-swap="outerHTML"
-                      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-                  <!-- </form> -->
-              </div>
-              <a href="/remove-cart/{{ cart.id }}" class="remove-link">Remove</a>
-            </div>
-          </div>
-        </div>
-        
         {% endfor %}
       </div>
 
