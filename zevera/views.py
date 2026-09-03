@@ -274,11 +274,9 @@ def update_cart(request, cart_id):
         cart_items = Cart.objects.filter(user=request.user)
         cart_subtotal = sum(c.dynamic_price for c in cart_items)
 
-        
+        discount = 0
         if request.session['coupon_code'] == "GET20":
             discount = round(cart_subtotal * 0.20,2)
-        else:
-            discount = 0
             
         cart_total = float(cart_subtotal - discount)      
 
