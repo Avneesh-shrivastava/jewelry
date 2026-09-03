@@ -274,13 +274,16 @@ def update_cart(request, cart_id):
         cart_items = Cart.objects.filter(user=request.user)
         cart_subtotal = sum(c.dynamic_price for c in cart_items)
 
+        
         if request.session['coupon_code'] == "GET20":
-            discount = round(cart_subtotal * 0.20, 2)
-
+            discount = round(cart_subtotal * 0.20,2)
+        else:
+            discount = 0
+            
         cart_total = float(cart_subtotal - discount)      
 
     item_html = render_to_string('partials/cart_item.html', {'cart': cart_item}, request=request)
-    totals_html = render_to_string('partials/cart_totals_oob.html', {'cart_total': cart_total, 'cart_subtotal':cart_subtotal}, request=request)
+    totals_html = render_to_string('partials/cart_totals_oob.html', {'cart_total': cart_total, 'cart_subtotal':cart_subtotal, 'discount' : discount}, request=request)
 
     return HttpResponse(item_html + totals_html)
     
