@@ -43,5 +43,6 @@ urlpatterns = [
     path('verify-payment/', verify_payment, name='verify_payment'),
     path('order-confirmation/<int:order_id>/', order_confirmation, name='order_confirmation'),
     path('remove-coupon/', remove_coupon, name='remove_coupon'),
+    path('search/', search, name='search'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
