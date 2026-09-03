@@ -407,63 +407,6 @@
   </footer>
 
 
-<script>
-document.querySelectorAll('.qty-input').forEach(input => {
-
-    input.addEventListener('change', function () {
-
-        const cartId = this.dataset.cartId;
-        const quantity = this.value;
-
-        fetch(`/update-cart/${cartId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({
-                quantity: quantity
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-
-            if (data.success) {
-                console.log("Quantity updated");
-            } else {
-                console.log(data.error);
-            }
-
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
-    });
-});
-
-
-function getCookie(name) {
-    let cookieValue = null;
-
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-                break;
-            }
-        }
-    }
-
-    return cookieValue;
-}
-</script>
-
 
 </body>
 </html>
