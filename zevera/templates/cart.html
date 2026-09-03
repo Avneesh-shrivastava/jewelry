@@ -132,7 +132,7 @@
     .summary-divider { border-top: 1px solid var(--border); margin: 1rem 0; }
     .summary-total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
     .summary-total-label { font-size: 0.85rem; font-weight: 600; }
-    .summary-total-value { font-family: 'Arial', serif; font-size: 1.6rem; font-weight: 700; }
+    .summary-total-value {  font-family: 'Arial', serif; font-size: 1.6rem; font-weight: 700; }
 
     .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 1.5rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition); width: 100%; }
     .btn-primary { background: var(--gold); color: var(--white); }
@@ -295,13 +295,13 @@
 
         <div class="summary-row"><span>Subtotal</span><span id="subtotalValue">₹{{ subtotal }}</span></div>
         <div class="summary-row"><span>Shipping</span><span>{% if shipping %}₹{{ shipping }}{% else %}Free{% endif %}</span></div>
-        <div class="summary-row discount"><span>Discount</span><span>−₹{{ discount|default:0 }}</span></div>
+        <div class="summary-row discount"><span>Discount</span><span id="discountValue">−₹{{ discount|default:0 }}</span></div>
 
         <div class="summary-divider"></div>
 
         <div class="summary-total">
           <span class="summary-total-label">Total</span>
-          <span id="totalValue">₹{{ total_price }}</span>
+          <span class='summary-total-value' id="totalValue">₹{{ total_price|floatformat:0 }}</span>
         </div>
 
         <a href="/checkout"><button class="btn btn-primary">Proceed To Checkout</button></a>
