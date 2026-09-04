@@ -293,15 +293,15 @@
       <div class="order-summary">
         <h3 class="summary-title">Order Summary</h3>
 
-        <div class="summary-row"><span>Subtotal</span><span id="subtotalValue">₹{{ subtotal }}</span></div>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotalValue">₹{{ subtotal|floatformat:0  }}</span></div>
         <div class="summary-row"><span>Shipping</span><span>{% if shipping %}₹{{ shipping }}{% else %}Free{% endif %}</span></div>
-        <div class="summary-row discount"><span>Discount</span><span id="discountValue">−₹{{ discount|default:0 }}</span></div>
+        <div class="summary-row discount"><span>Discount</span><span id="discountValue">−₹{{ discount|default:0|floatformat:0  }}</span></div>
 
         <div class="summary-divider"></div>
 
         <div class="summary-total">
           <span class="summary-total-label">Total</span>
-          <span class='summary-total-value' id="totalValue">₹{{ total_price|floatformat:0 }}</span>
+          <span id="totalValue">₹{{ total_price|floatformat:0 }}</span>
         </div>
 
         <a href="/checkout"><button class="btn btn-primary">Proceed To Checkout</button></a>
