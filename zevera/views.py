@@ -17,6 +17,7 @@ from django.db import transaction
 from django.db.models import Count
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -454,4 +455,23 @@ def remove_coupon(request):
     return redirect('cart')
 
 def search(request):
-    return render(request,'search.html')
+    query = request.GET.get('q', '').strip()
+    category = request.GET.get('category','')
+
+    products = Product.objects.all()
+              
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) | Q(prod_desc__icontains=query)
+        )
+        print(products.values())
+
+    if category:
+        products = products.filter(category__name__iexact=category)
+
+    return render(request, 'search.html', {
+        'query': query,
+        'category': category,
+        'products': products,
+        'result_count': products.count(),
+    })
