@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; font-weight: 400; color: var(--ink); background: var(--cream); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Header */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); flex: none; }
+    .logo span { color: var(--gold); }
+    .nav-desktop { display: none; }
+    .nav-desktop ul { display: flex; gap: 2rem; }
+    .nav-desktop a { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; transition: color var(--transition); }
+    .nav-desktop a:hover { color: var(--gold); }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 0.35rem; color: var(--ink); transition: color var(--transition); position: relative; }
+    .icon-btn:hover { color: var(--gold); }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .cart-count { position: absolute; top: -4px; right: -4px; background: var(--gold); color: var(--white); font-size: 0.65rem; font-weight: 600; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .cart-wrap { position: relative; }
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 0.35rem; }
+    .menu-toggle span { width: 22px; height: 2px; background: var(--ink); transition: var(--transition); }
+    #nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
+    .nav-mobile { max-height: 0; overflow: hidden; background: var(--white); border-top: 1px solid transparent; transition: max-height 0.35s ease, border-color 0.35s ease; }
+    #nav-toggle:checked ~ .nav-mobile { max-height: 400px; border-top-color: var(--border); padding: 1rem 0; }
+    .nav-mobile ul { display: flex; flex-direction: column; gap: 0.75rem; }
+    .nav-mobile a { display: block; padding: 0.5rem 0; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* Search bar — always visible, own row so it's reachable with one thumb on mobile */
+    .search-bar-row { background: var(--white); border-bottom: 1px solid var(--border); padding: 0.75rem 0; }
+    .search-form { display: flex; gap: 0.6rem; }
+    .search-form input {
+      flex: 1; min-width: 0; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+      font-family: inherit; font-size: 1rem; outline: none; transition: border-color var(--transition); background: var(--cream);
+    }
+    .search-form input:focus { border-color: var(--gold); background: var(--white); }
+    .search-form button {
+      flex: none; width: 48px; height: 48px; background: var(--ink); color: var(--cream); border: none; border-radius: var(--radius);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .search-form button:hover { background: var(--gold-dark); }
+    .search-form button svg { width: 20px; height: 20px; }
+
+    /* Result count + filters */
+    .results-meta { padding: 1.25rem 0 0.75rem; }
+    .results-count { font-size: 0.8rem; color: var(--ink-soft); }
+    .results-count strong { color: var(--ink); font-weight: 600; }
+    .results-count em { font-style: normal; color: var(--gold-dark); font-weight: 600; }
+
+    .filter-row { display: flex; gap: 0.6rem; overflow-x: auto; padding: 0.75rem 0 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex: none; padding: 0.6rem 1.1rem; border: 1px solid var(--border); border-radius: 30px;
+      background: var(--white); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.03em;
+      cursor: pointer; transition: all var(--transition); white-space: nowrap;
+    }
+    .filter-chip:hover { border-color: var(--gold); }
+    .filter-chip.is-active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+    /* Results grid — 2 cols on phones by default (mobile-first) */
+    .search-section { padding: 0 0 4rem; }
+    .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+    .product-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform var(--transition), box-shadow var(--transition); }
+    .product-card:active { transform: scale(0.98); }
+    .product-image { aspect-ratio: 1; position: relative; overflow: hidden; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; }
+    .product-badge {
+      position: absolute; top: 0.6rem; left: 0.6rem; background: var(--ink); color: var(--white);
+      font-size: 0.58rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.25rem 0.55rem;
+    }
+    .product-badge.new { background: var(--rose); }
+    .product-info { padding: 0.8rem; }
+    .product-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.15rem; line-height: 1.3; }
+    .product-info .material { font-size: 0.62rem; color: var(--ink-soft); margin-bottom: 0.35rem; }
+    .product-price { font-size: 0.82rem; font-weight: 600; color: var(--gold-dark); }
+    .product-price del { font-weight: 400; color: var(--ink-soft); font-size: 0.72rem; margin-left: 0.4rem; }
+
+    .load-more-row { text-align: center; margin-top: 2rem; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 2rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition); }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+    /* No results */
+    .no-results { text-align: center; padding: 3.5rem 1.25rem; }
+    .no-results-icon { width: 56px; height: 56px; margin: 0 auto 1.25rem; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--ink-soft); }
+    .no-results h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .no-results p { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 1.5rem; max-width: 320px; margin-left: auto; margin-right: auto; }
+    .no-results-suggestions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+    .no-results-suggestions a {
+      font-size: 0.72rem; font-weight: 600; color: var(--ink); background: var(--white); border: 1px solid var(--border);
+      padding: 0.5rem 0.9rem; border-radius: 30px;
+    }
+    .no-results-suggestions a:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+    /* Trending searches (helps when the search bar is empty) */
+    .trending-row { padding: 1rem 0 0; display: none; }
+    .trending-row.is-visible { display: block; }
+    .trending-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.6rem; }
+    .trending-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .trending-tags a { font-size: 0.75rem; color: var(--gold-dark); background: var(--white); border: 1px solid var(--border); padding: 0.45rem 0.85rem; border-radius: 30px; }
+
+    /* Footer */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 2.5rem 0 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2rem; }
+    .footer-brand .logo { color: var(--cream); margin-bottom: 0.75rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; opacity: 0.75; }
+    .footer-col h4 { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col a { font-size: 0.8rem; opacity: 0.75; transition: opacity var(--transition); }
+    .footer-col a:hover { opacity: 1; color: var(--gold); }
+    .footer-bottom { border-top: 1px solid rgba(250, 248, 245, 0.1); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; align-items: center; text-align: center; }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    /* Sticky mobile filter/sort bar could go here if needed later */
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      .results-grid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+    }
+
+    /* Desktop */
+    @media (min-width: 768px) {
+      .menu-toggle { display: none; }
+      .nav-desktop { display: block; }
+      .nav-mobile { display: none !important; }
+      .logo { font-size: 1.75rem; }
+      .results-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+      .search-form { max-width: 480px; }
+      section, .search-section { padding-bottom: 4.5rem; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Maison <span>Aurée</span></a>
+      <nav class="nav-desktop">
+        <ul>
+          <li><a href="/products/1">Rings</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <li><a href="/products/4">Bracelets</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <div class="cart-wrap">
+          <a href="/cart"><button class="icon-btn" aria-label="Cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+          </button></a>
+          {% if no_of_cart_items %}
+            <span class="cart-count">{{ no_of_cart_items }}</span>
+          {% endif %}
+        </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+        <label for="nav-toggle" class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+    <div class="nav-mobile">
+      <div class="container">
+        <ul>
+          <li><a href="/products/1">Rings</a></li>
+          <li><a href="/products/2">Necklaces</a></li>
+          <li><a href="/products/3">Earrings</a></li>
+          <li><a href="/products/4">Bracelets</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="search-bar-row">
+    <div class="container">
+      <form class="search-form" method="GET" action="{% url 'search' %}">
+        <input type="search" name="q" value="{{ query }}" placeholder="Search rings, necklaces, earrings..." autofocus>
+        <button type="submit" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+      </form>
+
+      {% if not query %}
+      <div class="trending-row is-visible">
+        <p class="trending-label">Trending Searches</p>
+        <div class="trending-tags">
+          <a href="?q=solitaire+ring">Solitaire Ring</a>
+          <a href="?q=gold+necklace">Gold Necklace</a>
+          <a href="?q=hoop+earrings">Hoop Earrings</a>
+          <a href="?q=bracelet">Bracelet</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="container results-meta">
+    {% if query %}
+    <p class="results-count"><strong>{{ result_count }}</strong> result{{ result_count|pluralize }} for <em>"{{ query }}"</em></p>
+    {% endif %}
+
+    <div class="filter-row">
+      <a href="?q={{ query }}" class="filter-chip {% if not category %}is-active{% endif %}">All</a>
+      <a href="?q={{ query }}&category=rings" class="filter-chip {% if category == 'rings' %}is-active{% endif %}">Rings</a>
+      <a href="?q={{ query }}&category=necklaces" class="filter-chip {% if category == 'necklaces' %}is-active{% endif %}">Necklaces</a>
+      <a href="?q={{ query }}&category=earrings" class="filter-chip {% if category == 'earrings' %}is-active{% endif %}">Earrings</a>
+      <a href="?q={{ query }}&category=bracelets" class="filter-chip {% if category == 'bracelets' %}is-active{% endif %}">Bracelets</a>
+    </div>
+  </div>
+
+  <section class="search-section">
+    <div class="container">
+
+      {% if products %}
+      <div class="results-grid">
+        {% for product in products %}
+        <a href="/product-overview/{{ product.id }}">
+          <article class="product-card">
+            <div class="product-image">
+              {% if forloop.counter <= 2 and not query %}<span class="product-badge new">New</span>{% endif %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </div>
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <p class="material">{{ product.prod_desc }}</p>
+              <p class="product-price">₹{{ product.price }}</p>
+            </div>
+          </article>
+        </a>
+        {% endfor %}
+      </div>
+
+      {% if has_more %}
+      <div class="load-more-row">
+        <a href="?q={{ query }}&category={{ category }}&page={{ next_page }}" class="btn btn-outline">Load More</a>
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="no-results">
+        <div class="no-results-icon">◇</div>
+        <h2>No pieces found</h2>
+        <p>We couldn't find anything matching "{{ query }}". Try a different search term or browse a category below.</p>
+        <div class="no-results-suggestions">
+          <a href="/products/1">Rings</a>
+          <a href="/products/2">Necklaces</a>
+          <a href="/products/3">Earrings</a>
+          <a href="/products/4">Bracelets</a>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">Maison <span>Aurée</span></div>
+          <p>Small-batch fine jewelry, fitted to you before it ever leaves the workshop.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul><li><a href="#">Rings</a></li><li><a href="#">Necklaces</a></li><li><a href="#">Earrings</a></li><li><a href="#">New Arrivals</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Care</h4>
+          <ul><li><a href="#">Sizing Guide</a></li><li><a href="#">Returns</a></li><li><a href="#">Cleaning & Repair</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <ul><li><a href="#">Our Workshop</a></li><li><a href="#">Bespoke Orders</a></li><li><a href="#">Contact</a></li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Maison Aurée. All rights reserved.</p>
+        <p>Insured shipping · Lifetime resizing</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
