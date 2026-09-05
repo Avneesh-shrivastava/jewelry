@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+      --success: #6f9c76;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; font-weight: 400; color: var(--ink); background: var(--cream); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Header */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); }
+    .logo span { color: var(--gold); }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 0.35rem; color: var(--ink); transition: color var(--transition); }
+    .icon-btn:hover { color: var(--gold); }
+    .icon-btn svg { width: 22px; height: 22px; }
+
+    /* Breadcrumb */
+    .breadcrumb { padding: 1rem 0 0; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink-soft); text-transform: uppercase; }
+    .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.5; }
+
+    /* Account header */
+    .account-hero { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; }
+    .avatar {
+      width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(145deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center; flex: none;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: var(--white);
+    }
+    .account-hero-info h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; }
+    .account-hero-info p { font-size: 0.78rem; color: var(--ink-soft); }
+    .member-since { font-size: 0.68rem; color: var(--gold-dark); font-weight: 600; letter-spacing: 0.03em; margin-top: 0.15rem; }
+
+    /* Layout */
+    .account-section { padding: 0.5rem 0 4rem; }
+    .account-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+
+    /* Side nav (becomes a horizontal scroll row on mobile) */
+    .account-nav { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .account-nav::-webkit-scrollbar { display: none; }
+    .account-nav a {
+      flex: none; display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.1rem;
+      border-radius: 30px; border: 1px solid var(--border); background: var(--white);
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; transition: all var(--transition);
+    }
+    .account-nav a.is-active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+    .account-nav a:hover:not(.is-active) { border-color: var(--gold); }
+    .account-nav svg { width: 15px; height: 15px; }
+
+    /* Panels */
+    .panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
+    .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; }
+    .panel-edit-link { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; color: var(--gold-dark); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Form fields (matches checkout) */
+    .field-row { display: grid; grid-template-columns: 1fr; gap: 0.9rem; margin-bottom: 0.9rem; }
+    .field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .field label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-soft); }
+    .field input {
+      padding: 0.75rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius);
+      font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color var(--transition); background: var(--white); color: var(--ink);
+    }
+    .field input:focus { border-color: var(--gold); }
+    .field input:disabled { background: var(--cream); color: var(--ink-soft); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.85rem 1.5rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition); }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .btn-full { width: 100%; }
+
+    /* Order history rows */
+    .order-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .order-row:last-of-type { border-bottom: none; }
+    .order-row-info { display: flex; flex-direction: column; gap: 0.2rem; }
+    .order-row-id { font-size: 0.82rem; font-weight: 600; }
+    .order-row-meta { font-size: 0.7rem; color: var(--ink-soft); }
+    .order-row-right { display: flex; align-items: center; gap: 0.9rem; }
+    .order-row-total { font-size: 0.82rem; font-weight: 600; color: var(--gold-dark); }
+    .status-pill { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.3rem 0.65rem; border-radius: 20px; background: var(--cream); color: var(--ink-soft); }
+    .status-pill.confirmed, .status-pill.paid, .status-pill.delivered { background: rgba(111, 156, 118, 0.15); color: var(--success); }
+    .status-pill.pending { background: rgba(201, 169, 98, 0.15); color: var(--gold-dark); }
+    .status-pill.cancelled { background: rgba(183, 110, 121, 0.15); color: var(--rose); }
+    .order-row-link { font-size: 0.7rem; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+    .empty-block { text-align: center; padding: 2rem 1rem; }
+    .empty-block p { font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 1rem; }
+
+    /* Address card */
+    .address-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.9rem; }
+    .address-card:last-child { margin-bottom: 0; }
+    .address-card-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 0.4rem; display: inline-block; }
+    .address-card p { font-size: 0.82rem; line-height: 1.6; }
+    .address-card-actions { display: flex; gap: 1rem; margin-top: 0.6rem; }
+    .address-card-actions button { background: none; border: none; cursor: pointer; font-size: 0.68rem; font-weight: 600; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; padding: 0; }
+    .address-card-actions button:hover { color: var(--gold-dark); }
+    .address-card-actions .danger:hover { color: var(--rose); }
+
+    /* Logout panel */
+    .logout-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .logout-row p { font-size: 0.78rem; color: var(--ink-soft); }
+
+    /* Footer */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 2.5rem 0 1.5rem; margin-top: 1rem; }
+    .footer-bottom { text-align: center; }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    /* Tablet+ */
+    @media (min-width: 720px) {
+      .account-grid { grid-template-columns: 220px 1fr; align-items: start; }
+      .account-nav { flex-direction: column; overflow-x: visible; position: sticky; top: 90px; }
+      .account-nav a { width: 100%; }
+      .field-row.two-col { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Maison <span>Aurée</span></a>
+      <div class="header-actions">
+        <a href="/cart"><button class="icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+        </button></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span>My Account
+  </div>
+
+  <div class="container account-hero">
+    <div class="avatar">{{ request.user.first_name|slice:":1"|default:request.user.username|slice:":1"|upper }}</div>
+    <div class="account-hero-info">
+      <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
+      <p>{{ request.user.email }}</p>
+      <p class="member-since">Member since {{ request.user.date_joined|date:"F Y" }}</p>
+    </div>
+  </div>
+
+  <section class="account-section">
+    <div class="container account-grid">
+
+      <!-- Nav -->
+      <nav class="account-nav">
+        <a href="#details" class="is-active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg>
+          Account Details
+        </a>
+        <a href="#orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/></svg>
+          My Orders
+        </a>
+        <a href="#addresses">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          Addresses
+        </a>
+        <a href="#security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Security
+        </a>
+      </nav>
+
+      <!-- Content -->
+      <div>
+
+        <!-- Account details -->
+        <div class="panel" id="details">
+          <div class="panel-head">
+            <span class="panel-title">Account Details</span>
+          </div>
+          <form method="POST" action="{% url 'update_profile' %}">
+            {% csrf_token %}
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="first_name" value="{{ request.user.first_name }}">
+              </div>
+              <div class="field">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="last_name" value="{{ request.user.last_name }}">
+              </div>
+            </div>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ request.user.email }}">
+              </div>
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" value="{{ request.user.profile.phone|default:'' }}">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+
+        <!-- Orders -->
+        <div class="panel" id="orders">
+          <div class="panel-head">
+            <span class="panel-title">My Orders</span>
+          </div>
+
+          {% if orders %}
+            {% for order in orders %}
+            <div class="order-row">
+              <div class="order-row-info">
+                <span class="order-row-id">Order #{{ order.id }}</span>
+                <span class="order-row-meta">{{ order.created_at|date:"d M Y" }} · {{ order.items.count }} item{{ order.items.count|pluralize }}</span>
+              </div>
+              <div class="order-row-right">
+                <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
+                <span class="order-row-total">₹{{ order.total }}</span>
+                <a href="/orders/{{ order.id }}" class="order-row-link">View</a>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-block">
+              <p>You haven't placed any orders yet.</p>
+              <a href="/" class="btn btn-outline">Start Shopping</a>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Addresses -->
+        <div class="panel" id="addresses">
+          <div class="panel-head">
+            <span class="panel-title">Saved Addresses</span>
+            <a href="/addresses/add" class="panel-edit-link">+ Add New</a>
+          </div>
+
+          {% if addresses %}
+            {% for address in addresses %}
+            <div class="address-card">
+              {% if address.is_default %}<span class="address-card-tag">Default</span>{% endif %}
+              <p>
+                {{ address.full_name }}<br>
+                {{ address.address_line1 }}{% if address.landmark %}, {{ address.landmark }}{% endif %}<br>
+                {{ address.city }}, {{ address.state }} {{ address.pincode }}<br>
+                {{ address.phone }}
+              </p>
+              <div class="address-card-actions">
+                <button type="button">Edit</button>
+                <button type="button" class="danger">Remove</button>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-block">
+              <p>No saved addresses yet.</p>
+              <a href="/addresses/add" class="btn btn-outline">Add Address</a>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Security / logout -->
+        <div class="panel" id="security">
+          <div class="panel-head">
+            <span class="panel-title">Security</span>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="password">Password</label>
+              <input type="password" id="password" value="••••••••" disabled>
+            </div>
+          </div>
+          <a href="/change-password/" class="btn btn-outline">Change Password</a>
+
+          <div class="summary-divider" style="border-top:1px solid var(--border); margin:1.5rem 0;"></div>
+
+          <div class="logout-row">
+            <p>Sign out of your account on this device.</p>
+            <form action="{% url 'logout' %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline">
+                Log Out
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>© 2026 Maison Aurée. All rights reserved. · Insured shipping · Lifetime resizing</p>
+    </div>
+  </footer>
+
+</body>
+</html>
