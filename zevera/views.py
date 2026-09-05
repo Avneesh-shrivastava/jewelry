@@ -481,3 +481,19 @@ def search(request):
         'result_count': products.count(),
         'cart_items_no':cart_items_no,
     })
+
+@login_required
+def profile(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'profile.html', {'orders': orders})
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('first_name', '').strip()
+        user.last_name = request.POST.get('last_name', '').strip()
+        user.email = request.POST.get('email', '').strip()
+        user.save()
+        messages.success(request, "Profile updated.")
+    return redirect('profile')
