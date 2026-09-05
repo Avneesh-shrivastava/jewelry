@@ -44,5 +44,7 @@ urlpatterns = [
     path('order-confirmation/<int:order_id>/', order_confirmation, name='order_confirmation'),
     path('remove-coupon/', remove_coupon, name='remove_coupon'),
     path('search/', search, name='search'),
+    path('profile/', profile, name='profile'),
+    path('update-profile/', update_profile, name='update_profile'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
