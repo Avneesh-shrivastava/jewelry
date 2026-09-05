@@ -289,7 +289,7 @@ def update_cart(request, cart_id):
     return HttpResponse(item_html + totals_html)
     
 
-@login_required
+@login_required(login_url='/login/')
 def checkout(request):
 
     cart_items = Cart.objects.filter(user=request.user)
@@ -312,7 +312,7 @@ def checkout(request):
         'total': total,
     })
 
-@login_required
+@login_required(login_url='/login/')
 def place_order(request):
     if request.method != 'POST':
         return redirect('checkout')
@@ -383,7 +383,7 @@ def place_order(request):
     return redirect('razorpay_payment', order_id=order.id)
 
 
-@login_required
+@login_required(login_url='/login/')
 def razorpay_payment(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
 
@@ -442,12 +442,12 @@ def verify_payment(request):
 
     return JsonResponse({'success': True, 'redirect_url': f'/order-confirmation/{order.id}/'})
 
-@login_required
+@login_required(login_url='/login/')
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'order_confirmation.html', {'order': order})
 
-@login_required
+@login_required(login_url='/login/')
 def remove_coupon(request):
     if request.method == 'POST':
         if 'coupon_code' in request.session:
@@ -482,12 +482,14 @@ def search(request):
         'cart_items_no':cart_items_no,
     })
 
-@login_required
+@login_required(login_url='/login/')
 def profile(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'profile.html', {'orders': orders})
 
-@login_required
+
+
+@login_required(login_url='/login/')
 def update_profile(request):
     if request.method == 'POST':
         user = request.user
