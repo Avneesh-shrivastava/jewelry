@@ -457,6 +457,12 @@ def remove_coupon(request):
 def search(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category','')
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user = request.user)
+        cart_items_no = len(cart)
+    else:
+        cart = []
+        cart_items_no = 0
 
     products = Product.objects.all()
               
@@ -464,7 +470,6 @@ def search(request):
         products = products.filter(
             Q(name__icontains=query) | Q(prod_desc__icontains=query)
         )
-        print(products.values())
 
     if category:
         products = products.filter(category__name__iexact=category)
@@ -474,4 +479,5 @@ def search(request):
         'category': category,
         'products': products,
         'result_count': products.count(),
+        'cart_items_no':cart_items_no,
     })
