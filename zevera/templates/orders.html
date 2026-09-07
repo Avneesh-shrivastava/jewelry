@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders — Maison Aurée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --gold: #c9a962;
+      --gold-dark: #a88b4a;
+      --rose: #b76e79;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --cream: #faf8f5;
+      --white: #ffffff;
+      --border: #e8e4df;
+      --shadow: 0 4px 24px rgba(26, 26, 26, 0.08);
+      --shadow-lg: 0 12px 48px rgba(26, 26, 26, 0.12);
+      --radius: 4px;
+      --transition: 0.3s ease;
+      --success: #6f9c76;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; font-weight: 400; color: var(--ink); background: var(--cream); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+    .container { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Header */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; gap: 1rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); }
+    .logo span { color: var(--gold); }
+    .icon-btn { background: none; border: none; cursor: pointer; padding: 0.35rem; color: var(--ink); transition: color var(--transition); }
+    .icon-btn:hover { color: var(--gold); }
+    .icon-btn svg { width: 22px; height: 22px; }
+
+    /* Breadcrumb + title */
+    .breadcrumb { padding: 1rem 0 0; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink-soft); text-transform: uppercase; }
+    .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.5; }
+    .orders-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 600; padding: 1rem 0 0.25rem; }
+    .orders-subtitle { font-size: 0.8rem; color: var(--ink-soft); padding-bottom: 1.25rem; }
+
+    /* Status filter chips */
+    .filter-row { display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 1.5rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex: none; padding: 0.55rem 1.05rem; border: 1px solid var(--border); border-radius: 30px;
+      background: var(--white); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+      cursor: pointer; transition: all var(--transition); white-space: nowrap;
+    }
+    .filter-chip:hover { border-color: var(--gold); }
+    .filter-chip.is-active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+    /* Order card */
+    .orders-section { padding: 0 0 4rem; }
+    .order-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; margin-bottom: 1rem; }
+    .order-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+    .order-card-id { font-size: 0.85rem; font-weight: 700; }
+    .order-card-date { font-size: 0.7rem; color: var(--ink-soft); margin-top: 0.1rem; }
+    .status-pill { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.32rem 0.7rem; border-radius: 20px; background: var(--cream); color: var(--ink-soft); flex: none; }
+    .status-pill.confirmed, .status-pill.paid, .status-pill.delivered { background: rgba(111, 156, 118, 0.15); color: var(--success); }
+    .status-pill.pending { background: rgba(201, 169, 98, 0.15); color: var(--gold-dark); }
+    .status-pill.shipped { background: rgba(74, 74, 74, 0.1); color: var(--ink-soft); }
+    .status-pill.cancelled { background: rgba(183, 110, 121, 0.15); color: var(--rose); }
+
+    /* Item thumbnail stack */
+    .order-card-items { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
+    .item-thumb-stack { display: flex; }
+    .item-thumb {
+      width: 48px; height: 48px; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--white);
+      margin-left: -12px; flex: none; background: linear-gradient(145deg, #faf8f5, #e8dcc8);
+    }
+    .item-thumb:first-child { margin-left: 0; }
+    .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .item-thumb-more {
+      width: 48px; height: 48px; border-radius: var(--radius); border: 2px solid var(--white); margin-left: -12px;
+      background: var(--ink); color: var(--cream); display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem; font-weight: 600; flex: none;
+    }
+    .order-card-summary { font-size: 0.78rem; color: var(--ink-soft); }
+    .order-card-summary strong { color: var(--ink); }
+
+    .order-card-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 0.9rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 0.75rem; }
+    .order-card-total { font-size: 0.95rem; font-weight: 700; color: var(--gold-dark); }
+    .order-card-total span { display: block; font-size: 0.65rem; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+    .order-card-actions { display: flex; gap: 0.6rem; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.1rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border: none; cursor: pointer; transition: all var(--transition); border-radius: var(--radius); }
+    .btn-primary { background: var(--gold); color: var(--white); }
+    .btn-primary:hover { background: var(--gold-dark); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+    /* Empty state */
+    .empty-orders { text-align: center; padding: 3.5rem 1.25rem; }
+    .empty-orders-icon { width: 56px; height: 56px; margin: 0 auto 1.25rem; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+    .empty-orders h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .empty-orders p { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 1.5rem; }
+
+    /* Footer */
+    .footer { background: var(--ink); color: rgba(250, 248, 245, 0.8); padding: 2.5rem 0 1.5rem; margin-top: 1rem; }
+    .footer-bottom { text-align: center; }
+    .footer-bottom p { font-size: 0.75rem; opacity: 0.6; }
+
+    @media (min-width: 640px) {
+      .order-card-head { flex-wrap: nowrap; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { padding: 0 2rem; }
+    }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Maison <span>Aurée</span></a>
+      <a href="/profile/"><button class="icon-btn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg>
+      </button></a>
+    </div>
+  </header>
+
+  <div class="container breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/profile/">My Account</a><span class="sep">/</span>Orders
+  </div>
+
+  <div class="container">
+    <h1 class="orders-title">My Orders</h1>
+    <p class="orders-subtitle">{{ orders|length }} order{{ orders|length|pluralize }} placed</p>
+
+    <div class="filter-row">
+      <a href="?status=" class="filter-chip {% if not status_filter %}is-active{% endif %}">All</a>
+      <a href="?status=pending" class="filter-chip {% if status_filter == 'pending' %}is-active{% endif %}">Pending</a>
+      <a href="?status=confirmed" class="filter-chip {% if status_filter == 'confirmed' %}is-active{% endif %}">Confirmed</a>
+      <a href="?status=shipped" class="filter-chip {% if status_filter == 'shipped' %}is-active{% endif %}">Shipped</a>
+      <a href="?status=delivered" class="filter-chip {% if status_filter == 'delivered' %}is-active{% endif %}">Delivered</a>
+      <a href="?status=cancelled" class="filter-chip {% if status_filter == 'cancelled' %}is-active{% endif %}">Cancelled</a>
+    </div>
+  </div>
+
+  <section class="orders-section">
+    <div class="container">
+
+      {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+          <div class="order-card-head">
+            <div>
+              <div class="order-card-id">Order #{{ order.id }}</div>
+              <div class="order-card-date">Placed on {{ order.created_at|date:"d M Y" }}</div>
+            </div>
+            <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
+          </div>
+
+          <div class="order-card-items">
+            <div class="item-thumb-stack">
+              {% for item in order.items.all|slice:":3" %}
+              <div class="item-thumb"><img src="{{ item.product.image.url }}" alt="{{ item.product_name }}"></div>
+              {% endfor %}
+              {% if order.items.count > 3 %}
+              <div class="item-thumb-more">+{{ order.items.count|add:"-3" }}</div>
+              {% endif %}
+            </div>
+            <span class="order-card-summary"><strong>{{ order.items.count }}</strong> item{{ order.items.count|pluralize }}</span>
+          </div>
+
+          <div class="order-card-foot">
+            <div class="order-card-total">
+              <span>Total</span>
+              ₹{{ order.total }}
+            </div>
+            <div class="order-card-actions">
+              <a href="/orders/{{ order.id }}"><button class="btn btn-outline">View Details</button></a>
+              {% if order.status == 'delivered' %}
+              <a href="/product-overview/{{ order.items.first.product.id }}"><button class="btn btn-primary">Buy Again</button></a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      {% else %}
+      <div class="empty-orders">
+        <div class="empty-orders-icon">🛍️</div>
+        <h2>No orders yet</h2>
+        <p>{% if status_filter %}No orders match this filter.{% else %}When you place an order, it'll show up here.{% endif %}</p>
+        <a href="/"><button class="btn btn-primary">Start Shopping</button></a>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>© 2026 Maison Aurée. All rights reserved. · Insured shipping · Lifetime resizing</p>
+    </div>
+  </footer>
+
+</body>
+</html>
