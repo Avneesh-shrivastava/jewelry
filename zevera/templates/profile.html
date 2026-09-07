@@ -150,7 +150,7 @@
 
   <header class="header">
     <div class="container header-inner">
-      <a href="/" class="logo">Maison <span>Aurée</span></a>
+      <a href="/home-page" class="logo">Zevera <span>Jewellers</span></a>
       <div class="header-actions">
         <a href="/cart"><button class="icon-btn" aria-label="Cart">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2"/><circle cx="10" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
@@ -220,10 +220,10 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" value="{{ request.user.email }}">
               </div>
-              <div class="field">
+              <!-- <div class="field">
                 <label for="phone">Phone</label>
                 <input type="tel" id="phone" name="phone" value="{{ request.user.profile.phone|default:'' }}">
-              </div>
+              </div> -->
             </div>
             <button type="submit" class="btn btn-primary">Save Changes</button>
           </form>
