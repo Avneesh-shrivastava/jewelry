@@ -499,3 +499,6 @@ def update_profile(request):
         user.save()
         messages.success(request, "Profile updated.")
     return redirect('profile')
+
+def orders(request, order_id):
+    return 
