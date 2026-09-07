@@ -501,4 +501,4 @@ def update_profile(request):
     return redirect('profile')
 
 def orders(request, order_id):
-    return 
+    return render(request, 'orders.html')
