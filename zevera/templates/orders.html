@@ -154,7 +154,7 @@
         <div class="order-card">
           <div class="order-card-head">
             <div>
-              <div class="order-card-id">Order #{{ order.id }}</div>
+              <!-- <div class="order-card-id">Order #{{ order.id }}</div> -->
               <div class="order-card-date">Placed on {{ order.created_at|date:"d M Y" }}</div>
             </div>
             <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
