@@ -501,9 +501,15 @@ def update_profile(request):
     return redirect('profile')
 
 def orders(request):
-    order = Order.objects.all()
-    context = {
-        "orders" : order,
-    }
+    status_filter = request.GET.get('status', '')
 
-    return render(request, 'orders.html', context)
+    order_qs = OrderItem.objects.all()
+    for i in order_qs:
+        print(i.order.full_name)
+    if status_filter:
+        order_qs = order_qs.filter(status=status_filter)
+
+    return render(request, 'orders.html', {
+        'orders': order_qs,
+        'status_filter': status_filter,
+    })
