@@ -501,4 +501,9 @@ def update_profile(request):
     return redirect('profile')
 
 def orders(request, order_id):
-    return render(request, 'orders.html')
+    order = Order.objects.all()
+    context = {
+        "orders" : order,
+    }
+
+    return render(request, 'orders.html', context)
