@@ -46,5 +46,6 @@ urlpatterns = [
     path('search/', search, name='search'),
     path('profile/', profile, name='profile'),
     path('update-profile/', update_profile, name='update_profile'),
-    path('orders/<int:order_id>', update_profile, name='orders'),
+    path('orders/<int:order_id>', orders, name='orders'),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
