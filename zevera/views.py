@@ -500,7 +500,7 @@ def update_profile(request):
         messages.success(request, "Profile updated.")
     return redirect('profile')
 
-def orders(request, order_id):
+def orders(request):
     order = Order.objects.all()
     context = {
         "orders" : order,
