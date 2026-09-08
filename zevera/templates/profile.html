@@ -229,33 +229,14 @@
           </form>
         </div>
 
+        {% if orders %}
         <!-- Orders -->
         <div class="panel" id="orders">
           <div class="panel-head">
-            <span class="panel-title">My Orders</span>
+          <a href="/orders"><span class="panel-title">My Orders</span></a>
           </div>
-
-
-            <div class="order-row">
-              <div class="order-row-info">
-                <span class="order-row-id">Order #{{ order.id }}</span>
-                <span class="order-row-meta">{{ order.created_at|date:"d M Y" }} · {{ order.items.count }} item{{ order.items.count|pluralize }}</span>
-              </div>
-              <div class="order-row-right">
-                <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
-                <span class="order-row-total">₹{{ order.total }}</span>
-                <a href="/orders/{{ order.id }}" class="order-row-link">View</a>
-              </div>
-            </div>
-
-
-            
-            <div class="empty-block">
-              <p>You haven't placed any orders yet.</p>
-              <a href="/" class="btn btn-outline">Start Shopping</a>
-            </div>
-          {% endif %}
         </div>
+        {% endif %}
 
         <!-- Addresses -->
         <div class="panel" id="addresses">
