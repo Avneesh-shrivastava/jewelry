@@ -235,8 +235,7 @@
             <span class="panel-title">My Orders</span>
           </div>
 
-          {% if orders %}
-            {% for order in orders %}
+
             <div class="order-row">
               <div class="order-row-info">
                 <span class="order-row-id">Order #{{ order.id }}</span>
@@ -248,8 +247,7 @@
                 <a href="/orders/{{ order.id }}" class="order-row-link">View</a>
               </div>
             </div>
-            {% endfor %}
-          {% else %}
+
             <div class="empty-block">
               <p>You haven't placed any orders yet.</p>
               <a href="/" class="btn btn-outline">Start Shopping</a>
