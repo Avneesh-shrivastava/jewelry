@@ -28,13 +28,10 @@ def home_page(request):
     best_sellers = OrderItem.objects.values('product_id')
     best_sellers = best_sellers.annotate(count=Count('product_id'))
     best_sellers = best_sellers.order_by('-count')
-    print(best_sellers)
+    reviews = Reviews.objects.all()
     
     products = Product.objects.filter( id__in=[item['product_id'] for item in best_sellers] )
-    print(products)
     
-
-
     global cart_items_no
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=request.user)
@@ -47,6 +44,7 @@ def home_page(request):
         'categories' : categories,
         'cart_items_no' : cart_items_no,
         'best_sellers': products,
+        'reviews': reviews,
     }
     return render(request, 'home_page.html',context)
 
@@ -459,7 +457,7 @@ def verify_payment(request):
 @login_required(login_url='/login/')
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    
+
     if 'coupon_code' in request.session:
         del request.session['coupon_code']
 
