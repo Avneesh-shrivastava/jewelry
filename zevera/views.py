@@ -504,8 +504,7 @@ def orders(request):
     status_filter = request.GET.get('status', '')
 
     order_qs = Order.objects.filter(user=request.user)
-    for i in order_qs:
-        print(i.product_name)
+        
     if status_filter:
         order_qs = order_qs.filter(status=status_filter)
 
