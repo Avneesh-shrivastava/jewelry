@@ -459,6 +459,10 @@ def verify_payment(request):
 @login_required(login_url='/login/')
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    if 'coupon_code' in request.session:
+        del request.session['coupon_code']
+
     return render(request, 'order_confirmation.html', {'order': order})
 
 @login_required(login_url='/login/')
@@ -517,10 +521,10 @@ def update_profile(request):
 def orders(request):
     status_filter = request.GET.get('status', '')
 
-    order_qs = Order.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(user=request.user).order_by('-created_at')
         
     if status_filter:
-        order_qs = order_qs.filter(status=status_filter)
+        order_qs = order_qs.filter(status=status_filter).order_by('-created_at')
 
     return render(request, 'orders.html', {
         'orders': order_qs,
