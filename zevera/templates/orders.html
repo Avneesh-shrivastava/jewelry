@@ -121,7 +121,7 @@
 
   <header class="header">
     <div class="container header-inner">
-      <a href="/" class="logo">Maison <span>Aurée</span></a>
+      <a href="/" class="logo">Zevera <span>Jewellers</span></a>
       <a href="/profile/"><button class="icon-btn" aria-label="Account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg>
       </button></a>
@@ -155,7 +155,7 @@
           <div class="order-card-head">
             <div>
               <!-- <div class="order-card-id">Order #{{ order.id }}</div> -->
-              <div class="order-card-date">Placed on {{ order.order.created_at|date:"d M Y" }}</div>
+              <div class="order-card-date">Placed on {{ order.created_at|date:"d M Y" }}</div>
             </div>
             <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
           </div>
