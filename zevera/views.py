@@ -28,7 +28,7 @@ def home_page(request):
     best_sellers = OrderItem.objects.values('product_id')
     best_sellers = best_sellers.annotate(count=Count('product_id'))
     best_sellers = best_sellers.order_by('-count')
-    reviews = Reviews.objects.all()
+    reviews = Reviews.objects.all()[:3]
     
     products = Product.objects.filter( id__in=[item['product_id'] for item in best_sellers] )
     
