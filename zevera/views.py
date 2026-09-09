@@ -300,7 +300,13 @@ def checkout(request):
 
     subtotal = sum(item.price * item.quantity for item in cart_items)
     shipping = 0
-    discount = 0
+
+    coupon_code = request.session.get('coupon_code')
+    if coupon_code == "GET20":
+        discount = round(subtotal * 0.20, 2)
+    else:
+        discount = 0
+    
     total = subtotal + shipping - discount
 
     return render(request, 'checkout.html', {
