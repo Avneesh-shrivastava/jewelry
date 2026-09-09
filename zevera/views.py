@@ -346,9 +346,17 @@ def place_order(request):
     if payment_method not in ('razorpay', 'cod'):
         messages.error(request, "Please select a valid payment method.")
         return redirect('checkout')
-
+   
     subtotal = sum(item.price * item.quantity for item in cart_items)
-    total = subtotal  # add shipping/discount logic here if needed
+
+
+    coupon_code = request.session.get('coupon_code')
+    if coupon_code == "GET20":
+        discount = round(subtotal * 0.20, 2)
+    else:
+        discount = 0
+
+    total = subtotal - discount  # add shipping/discount logic here if needed
 
     with transaction.atomic():
         order = Order.objects.create(
