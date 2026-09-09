@@ -1227,7 +1227,7 @@
       <p class="section-label">Limited Edition</p>
       <h2>The Bridal Edit</h2>
       <p>Exquisite engagement rings and wedding bands designed for couples who believe in forever. Book a private consultation today.</p>
-      <a href="#" class="btn btn-primary">View Bridal Collection</a>
+      <a href="#" class="btn btn-primary">COMING SOON</a>
     </div>
   </section>
 
@@ -1239,12 +1239,18 @@
         <h2 class="section-title">Loved By Our Customers</h2>
       </div>
       <div class="testimonial-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <blockquote>"The craftsmanship is extraordinary. My engagement ring exceeded every expectation — truly a piece of art."</blockquote>
-          <p class="testimonial-author">Sarah Mitchell<span>Verified Buyer</span></p>
-        </div>
-        <div class="testimonial-card">
+        {% if reviews  %}
+          {% for review in reviews %}
+            {% if review.stars == 5 %}
+              <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <blockquote>{{ review.review }}</blockquote>
+                <p class="testimonial-author">{{review.user}}<span>Verified Buyer</span></p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <!-- <div class="testimonial-card">
           <div class="testimonial-stars">★★★★★</div>
           <blockquote>"Beautiful packaging, fast delivery, and the necklace was even more stunning in person. Will definitely order again."</blockquote>
           <p class="testimonial-author">James Chen<span>Verified Buyer</span></p>
@@ -1253,7 +1259,7 @@
           <div class="testimonial-stars">★★★★★</div>
           <blockquote>"Their customer service helped me choose the perfect gift. The quality feels premium at every touchpoint."</blockquote>
           <p class="testimonial-author">Emily Rodriguez<span>Verified Buyer</span></p>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
