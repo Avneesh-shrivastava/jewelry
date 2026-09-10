@@ -30,7 +30,6 @@ def home_page(request):
     best_sellers = best_sellers.order_by('-count')
     reviews = Reviews.objects.all().distinct('user_id')[:4]
     
-    print(reviews)
     products = Product.objects.filter( id__in=[item['product_id'] for item in best_sellers] )
     
     global cart_items_no
