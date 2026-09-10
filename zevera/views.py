@@ -28,8 +28,9 @@ def home_page(request):
     best_sellers = OrderItem.objects.values('product_id')
     best_sellers = best_sellers.annotate(count=Count('product_id'))
     best_sellers = best_sellers.order_by('-count')
-    reviews = Reviews.objects.all()[:4]
-    
+    reviews = Reviews.objects.all().distinct('user_id')[:4]
+    # reviews = set(reviews)
+    print(reviews)
     products = Product.objects.filter( id__in=[item['product_id'] for item in best_sellers] )
     
     global cart_items_no
