@@ -528,3 +528,9 @@ def orders(request):
         'orders': order_qs,
         'status_filter': status_filter,
     })
+
+def newsletter(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        print(email)
+    return redirect('home_page')
