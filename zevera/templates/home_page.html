@@ -1269,8 +1269,9 @@
     <div class="container newsletter-inner">
       <h2>Join the Aurora Circle</h2>
       <p>Be the first to know about new collections, exclusive offers, and styling tips.</p>
-      <form class="newsletter-form" action="#" method="post">
-        <input type="email" placeholder="Your email address" required aria-label="Email address">
+      <form class="newsletter-form" action="{% url 'newsletter' %}" method="post">
+        {% csrf_token %}
+        <input type="email" placeholder="Your email address" required aria-label="Email address" name="email">
         <button type="submit" class="btn btn-primary">Subscribe</button>
       </form>
     </div>
