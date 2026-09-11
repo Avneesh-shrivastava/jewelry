@@ -47,5 +47,6 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
     path('update-profile/', update_profile, name='update_profile'),
     path('orders/', orders, name='orders'),
+    path('newsletter/', newsletter, name='newsletter'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
