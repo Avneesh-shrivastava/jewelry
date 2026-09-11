@@ -49,6 +49,15 @@ INSTALLED_APPS = [
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')       # your sending email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # an App Password, not your real Gmail password
+DEFAULT_FROM_EMAIL = f'Zevera Jewellers <{EMAIL_HOST_USER}>'
+
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': config('CLOUDINARY_API_KEY'),
