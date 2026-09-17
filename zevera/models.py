@@ -106,3 +106,6 @@ class OrderItem(models.Model):
     price = models.FloatField()
     quantity = models.IntegerField()
     size = models.CharField(max_length=5, null=True, blank=True)
+
+class subscribers(models.Model):
+    email = models.EmailField()
