@@ -533,17 +533,24 @@ def orders(request):
 def newsletter(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
-        
-        send_mail(
-            subject='Welcome to Maison Aurée',
-            message=(
-                "Thank you for subscribing.\n\n"
-                "You'll be the first to hear about new collections, "
-                "limited pieces, and exclusive offers.\n\n"
-                 "— Maison Aurée"
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+        # if not email:
+        #     messages.error(request, "Please enter a valid email.")
+        #     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        subscriber, created = subscribers.objects.get_or_create(email=email)
+
+        if created:
+            send_mail(
+                subject='Welcome to Zevera Jewellers',
+                message=(
+                    "Thank you for subscribing.\n\n"
+                    "You'll be the first to hear about new collections, "
+                    "limited pieces, and exclusive offers.\n\n"
+                    "— Avneesh Shrivastava"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+
     return redirect('home_page')
