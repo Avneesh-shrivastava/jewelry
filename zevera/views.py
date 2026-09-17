@@ -462,6 +462,24 @@ def order_confirmation(request, order_id):
     if 'coupon_code' in request.session:
         del request.session['coupon_code']
 
+    send_mail(
+    subject=f'Order Confirmed — #{order.id}',
+    message=(
+        f'Hi {order.full_name},\n\n'
+        f'Your order #{order.id} has been placed successfully.\n'
+        f'Total: ₹{order.total}\n'
+        f'Payment method: {order.get_payment_method_display()}\n\n'
+        f'We\'ll notify you once it ships.\n\n'
+        f'— Zevera Jewellers'
+    ),
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    recipient_list=[order.email],
+    fail_silently=False,
+)
+
+
+
+
     return render(request, 'order_confirmation.html', {'order': order})
 
 @login_required(login_url='/login/')
