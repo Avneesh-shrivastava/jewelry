@@ -18,6 +18,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.core.mail import send_mail
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -532,5 +533,16 @@ def orders(request):
 def newsletter(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        print(email)
+        send_mail(
+            subject='Welcome to Maison Aurée',
+            message=(
+                "Thank you for subscribing.\n\n"
+                "You'll be the first to hear about new collections, "
+                "limited pieces, and exclusive offers.\n\n"
+                 "— Maison Aurée"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
     return redirect('home_page')
