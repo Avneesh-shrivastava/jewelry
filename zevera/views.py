@@ -532,7 +532,8 @@ def orders(request):
 
 def newsletter(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email', '').strip()
+        
         send_mail(
             subject='Welcome to Maison Aurée',
             message=(
