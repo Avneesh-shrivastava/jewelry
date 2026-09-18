@@ -51,7 +51,7 @@
 </head>
 <body>
   <div class="auth-wrap">
-    <div class="auth-logo"><a href="{% url 'home_page' %}">Maison <span>Aurée</span></a></div>
+    <div class="auth-logo"><a href="{% url 'home_page' %}">Zevera <span>Jewellers</span></a></div>
 
     <div class="auth-card">
       <h1 class="auth-title">Create Your Account</h1>
@@ -61,26 +61,32 @@
         <div class="auth-errors">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</div>
       {% endif %}
 
-      <form class="auth-form" method="POST">
-        {% csrf_token %}
-        <div class="field-group">
-          <label class="field-label" for="{{ form.username.id_for_label }}">Username</label>
-          {{ form.username }}
-          {% if form.username.errors %}<p class="field-error">{{ form.username.errors.0 }}</p>{% endif %}
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="{{ form.password1.id_for_label }}">Password</label>
-          {{ form.password1 }}
-          {% if form.password1.errors %}<p class="field-error">{{ form.password1.errors.0 }}</p>
-          {% else %}<p class="field-help">At least 8 characters, not too similar to your username.</p>{% endif %}
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
-          {{ form.password2 }}
-          {% if form.password2.errors %}<p class="field-error">{{ form.password2.errors.0 }}</p>{% endif %}
-        </div>
-        <button type="submit" class="btn-primary">Create Account</button>
-      </form>
+      <form class="auth-form" method="POST" action="{% url 'signup' %}">
+  {% csrf_token %}
+
+  <div class="field-group">
+    <label class="field-label" for="username">Username</label>
+    <input type="text" id="username" name="username" required>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label" for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label" for="password1">Password</label>
+    <input type="password" id="password1" name="password1" required>
+    <p class="field-help">At least 8 characters, not too similar to your username.</p>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label" for="password2">Confirm Password</label>
+    <input type="password" id="password2" name="password2" required>
+  </div>
+
+  <button type="submit" class="btn-primary">Create Account</button>
+</form>
 
       <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
     </div>
