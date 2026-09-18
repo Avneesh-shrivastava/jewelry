@@ -61,32 +61,32 @@
         <div class="auth-errors">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</div>
       {% endif %}
 
-      <form class="auth-form" method="POST" action="{% url 'signup' %}">
-  {% csrf_token %}
+  <form class="auth-form" method="POST" action="{% url 'signup' %}">
+    {% csrf_token %}
 
-  <div class="field-group">
-    <label class="field-label" for="username">Username</label>
-    <input type="text" id="username" name="username" required>
-  </div>
+    <div class="field-group">
+      <label class="field-label" for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+    </div>
 
-  <div class="field-group">
-    <label class="field-label" for="email">Email</label>
-    <input type="email" id="email" name="email" required>
-  </div>
+    <div class="field-group">
+      <label class="field-label" for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+    </div>
 
-  <div class="field-group">
-    <label class="field-label" for="password1">Password</label>
-    <input type="password" id="password1" name="password1" required>
-    <p class="field-help">At least 8 characters, not too similar to your username.</p>
-  </div>
+    <div class="field-group">
+      <label class="field-label" for="password1">Password</label>
+      <input type="password" id="password1" name="password1" required>
+      <p class="field-help">At least 8 characters, not too similar to your username.</p>
+    </div>
 
-  <div class="field-group">
-    <label class="field-label" for="password2">Confirm Password</label>
-    <input type="password" id="password2" name="password2" required>
-  </div>
+    <div class="field-group">
+      <label class="field-label" for="password2">Confirm Password</label>
+      <input type="password" id="password2" name="password2" required>
+    </div>
 
-  <button type="submit" class="btn-primary">Create Account</button>
-</form>
+    <button type="submit" class="btn-primary">Create Account</button>
+  </form>
 
       <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
     </div>
