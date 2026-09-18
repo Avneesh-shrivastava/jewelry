@@ -157,10 +157,29 @@ def product_overview(request, id):
 
 def signup_view(request):
     if request.method == 'POST':
+
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
+            # try:
+            #     send_mail(
+            #         subject='Welcome to Maison Aurée',
+            #         message=(
+            #             f'Hi {user.username},\n\n'
+            #             f'Welcome to Maison Aurée. Your account has been created successfully.\n\n'
+            #             f'Explore our latest collection of fine jewelry, crafted just for you.\n\n'
+            #             f'— Maison Aurée'
+            #         ),
+            #         from_email=settings.DEFAULT_FROM_EMAIL,
+            #         recipient_list=[user.email],
+            #         fail_silently=False,
+            #     )
+            # except Exception as e:
+            #     print(f"Welcome email failed: {e}")
+
+
+
             return redirect('home_page')
     else:
         form = UserCreationForm()
