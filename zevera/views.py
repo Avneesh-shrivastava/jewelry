@@ -156,14 +156,14 @@ def product_overview(request, id):
     return render(request, 'product_overview.html',context)
 
 
-def signup(request):
+def signup_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         email = request.POST.get('email', '').strip()
         password1 = request.POST.get('password1', '')
         password2 = request.POST.get('password2', '')
 
-        if not all([username, email, password1, password2]):
+        if not all([username, password1, password2]):
             messages.error(request, "Please fill in all fields.")
             return redirect('signup')
 
@@ -179,27 +179,12 @@ def signup(request):
             messages.error(request, "Username already taken.")
             return redirect('signup')
 
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "An account with this email already exists.")
-            return redirect('signup')
+        # if User.objects.filter(email=email).exists():
+        #     messages.error(request, "An account with this email already exists.")
+        #     return redirect('signup')
 
-        user = User.objects.create_user(username=username, email=email, password=password1)
+        user = User.objects.create_user(username=username, password=password1)
         login(request, user)
-
-        try:
-            send_mail(
-                subject='Welcome to Maison Aurée',
-                message=(
-                    f'Hi {username},\n\n'
-                    f'Welcome to Maison Aurée. Your account has been created successfully.\n\n'
-                    f'— Maison Aurée'
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
-        except Exception as e:
-            print(f"Welcome email failed: {e}")
 
         messages.success(request, f"Welcome, {username}!")
         return redirect('home_page')
