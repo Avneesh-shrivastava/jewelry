@@ -19,6 +19,9 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -597,3 +600,37 @@ def newsletter(request):
                 )
 
     return redirect('home_page')
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_link = request.build_absolute_uri(f'/reset-password/{uid}/{token}/')
+
+            try:
+                send_mail(
+                    subject='Reset Your Password — Maison Aurée',
+                    message=(
+                        f'Hi {user.username},\n\n'
+                        f'Click the link below to reset your password:\n{reset_link}\n\n'
+                        f'If you didn\'t request this, you can safely ignore this email.\n\n'
+                        f'— Maison Aurée'
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Password reset email failed: {e}")
+
+        # Always show the same message, whether or not the email exists —
+        # this prevents someone from using this form to discover which
+        # emails are registered on your site
+        messages.success(request, "If that email exists, a reset link has been sent.")
+        return redirect('forgot_password')
+
+    return render(request, 'forgot_password.html')
