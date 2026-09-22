@@ -22,6 +22,7 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -634,3 +635,34 @@ def forgot_password(request):
         return redirect('forgot_password')
 
     return render(request, 'forgot_password.html')
+
+def reset_password(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is None or not default_token_generator.check_token(user, token):
+        messages.error(request, "This password reset link is invalid or has expired.")
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        if password1 != password2:
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
+
+        if len(password1) < 8:
+            messages.error(request, "Password must be at least 8 characters.")
+            return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
+
+        user.password = make_password(password1)
+        user.save()
+
+        messages.success(request, "Your password has been reset. You can now log in.")
+        return redirect('login')
+
+    return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
