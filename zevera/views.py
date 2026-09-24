@@ -615,7 +615,7 @@ def forgot_password(request):
 
             try:
                 send_mail(
-                    subject='Reset Your Password — Maison Aurée',
+                    subject='Reset Your Password — Zevera Jewellers',
                     message=(
                         f'Hi {user.username},\n\n'
                         f'Click the link below to reset your password:\n{reset_link}\n\n'
