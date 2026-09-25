@@ -52,6 +52,7 @@ def home_page(request):
         'best_sellers': products,
         'reviews': reviews,
     }
+    messages.success(request, 'hi')
     return render(request, 'home_page.html',context)
 
 def new_arrivals(request):
