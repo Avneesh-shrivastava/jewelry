@@ -607,10 +607,6 @@ def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         user = User.objects.filter(email=email).first()
-
-        if not user:
-            messages.error(request, 'This email does not exist')
-            return redirect('forgot_password')
         
         if user:
             uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -632,7 +628,9 @@ def forgot_password(request):
                 )
             except Exception as e:
                 print(f"Password reset email failed: {e}")
-
+        else:
+            messages.error(request, 'This email does not exist')
+            return redirect('forgot_password')
         # Always show the same message, whether or not the email exists —
         # this prevents someone from using this form to discover which
         # emails are registered on your site
