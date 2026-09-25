@@ -624,7 +624,7 @@ def forgot_password(request):
                         f'Hi {user.username},\n\n'
                         f'Click the link below to reset your password:\n{reset_link}\n\n'
                         f'If you didn\'t request this, you can safely ignore this email.\n\n'
-                        f'— Maison Aurée'
+                        f'— Zevera Jewellers'
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[email],
