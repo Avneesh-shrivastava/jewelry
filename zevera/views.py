@@ -608,6 +608,10 @@ def forgot_password(request):
         email = request.POST.get('email', '').strip()
         user = User.objects.filter(email=email).first()
 
+        if not user:
+            messages.error(request, 'This email does not exist')
+            return redirect('forgot_password')
+        
         if user:
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
@@ -632,6 +636,7 @@ def forgot_password(request):
         # Always show the same message, whether or not the email exists —
         # this prevents someone from using this form to discover which
         # emails are registered on your site
+        
         messages.success(request, "If that email exists, a reset link has been sent.")
         return redirect('forgot_password')
 
