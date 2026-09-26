@@ -53,7 +53,7 @@ def home_page(request):
         'best_sellers': products,
         'reviews': reviews,
     }
-    messages.success(request, 'hi')
+    
     return render(request, 'home_page.html',context)
 
 def new_arrivals(request):
@@ -170,28 +170,39 @@ def signup_view(request):
         password1 = request.POST.get('password1', '')
         password2 = request.POST.get('password2', '')
 
-        if not all([username, password1, password2]):
+        if not all([username, email, password1, password2]):
             messages.error(request, "Please fill in all fields.")
-            return redirect('signup')
+            return render(request, 'signup.html', {'username': username, 'email': email})
 
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
-            return redirect('signup')
+            return render(request, 'signup.html', {'username': username, 'email': email})
 
         if len(password1) < 8:
             messages.error(request, "Password must be at least 8 characters.")
-            return redirect('signup')
+            return render(request, 'signup.html', {'username': username, 'email': email})
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already taken.")
-            return redirect('signup')
+            return render(request, 'signup.html', {'username': username, 'email': email})
 
-        # if User.objects.filter(email=email).exists():
-        #     messages.error(request, "An account with this email already exists.")
-        #     return redirect('signup')
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "An account with this email already exists.")
+            return render(request, 'signup.html', {'username': username, 'email': email})
 
-        user = User.objects.create_user(username=username, password=password1)
+        user = User.objects.create_user(username=username, email=email, password=password1)
         login(request, user)
+
+        try:
+            send_mail(
+                subject='Welcome to Zevera Jewellers',
+                message=f'Hi {username},\n\nWelcome to Zevera Jewellers. Your account has been created.\n\n— Zevera jewellers',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Welcome email failed: {e}")
 
         messages.success(request, f"Welcome, {username}!")
         return redirect('home_page')
@@ -208,7 +219,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('send_otp')
+                return redirect('home_page')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -681,6 +692,8 @@ def send_otp(request):
         request.session['otp'] = otp
         request.session['otp_email'] = email
 
+        current_user = request.session['current_user']
+        print(current_user.id)
         try:
             send_mail(
                 subject='Your Verification Code — Zevera Jewellers',
@@ -715,7 +728,11 @@ def verify_otp(request):
             del request.session['otp']
             del request.session['otp_email']
             messages.success(request, "Email verified successfully!")
+            all_user_emails = User.objects.values_list('email')
+            if email not in all_user_emails:
+                User.objects.get()
             return redirect('home_page')
+            
         else:
             messages.error(request, "Invalid or expired code. Please try again.")
             return render(request, 'verify_email.html', {'otp_sent': True, 'email': email})
