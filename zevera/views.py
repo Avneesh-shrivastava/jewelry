@@ -24,6 +24,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.hashers import make_password
+import random
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -207,7 +208,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home_page')
+                return redirect('send_otp')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -671,3 +672,52 @@ def reset_password(request, uidb64, token):
         return redirect('login')
 
     return render(request, 'reset_password.html', {'uidb64': uidb64, 'token': token})
+
+def send_otp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+
+        otp = str(random.randint(100000, 999999))
+        request.session['otp'] = otp
+        request.session['otp_email'] = email
+
+        try:
+            send_mail(
+                subject='Your Verification Code — Zevera Jewellers',
+                message=f'Your verification code is: {otp}\n\nThis code expires in 10 minutes.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            messages.success(request, "Verification code sent.")
+        except Exception as e:
+            print(f"OTP email failed: {e}")
+            messages.error(request, "Couldn't send the code. Please try again.")
+
+        return render(request, 'verify_email.html', {'otp_sent': True, 'email': email})
+
+    return render(request, 'verify_email.html', {'otp_sent': False})
+
+
+def verify_otp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '')
+        entered_otp = ''.join([
+            request.POST.get('otp1', ''), request.POST.get('otp2', ''),
+            request.POST.get('otp3', ''), request.POST.get('otp4', ''),
+            request.POST.get('otp5', ''), request.POST.get('otp6', ''),
+        ])
+
+        stored_otp = request.session.get('otp')
+        stored_email = request.session.get('otp_email')
+
+        if entered_otp == stored_otp and email == stored_email:
+            del request.session['otp']
+            del request.session['otp_email']
+            messages.success(request, "Email verified successfully!")
+            return redirect('home_page')
+        else:
+            messages.error(request, "Invalid or expired code. Please try again.")
+            return render(request, 'verify_email.html', {'otp_sent': True, 'email': email})
+
+    return redirect('send_otp')
