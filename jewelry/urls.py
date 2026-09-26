@@ -50,5 +50,7 @@ urlpatterns = [
     path('newsletter/', newsletter, name='newsletter'),
     path('forgot-password/', forgot_password, name='forgot_password'),
     path('reset-password/<uidb64>/<token>/', reset_password, name='reset_password'),
+    path('send-otp/', send_otp, name='send_otp'),
+    path('verify-otp/', verify_otp, name='verify_otp'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
