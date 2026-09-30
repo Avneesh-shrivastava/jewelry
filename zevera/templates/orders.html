@@ -178,7 +178,7 @@
               ₹{{ order.total }}
             </div>
             <div class="order-card-actions">
-              <a href="/orders/{{ order.id }}"><button class="btn btn-outline">View Details</button></a>
+              <a href="/view-order-details/{{ order.id }}"><button class="btn btn-outline">View Details</button></a>
               {% if order.status == 'delivered' %}
               <a href="/product-overview/{{ order.items.first.product.id }}"><button class="btn btn-primary">Buy Again</button></a>
               {% endif %}
