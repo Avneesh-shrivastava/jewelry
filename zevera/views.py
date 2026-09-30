@@ -738,3 +738,11 @@ def verify_otp(request):
             return render(request, 'verify_email.html', {'otp_sent': True, 'email': email})
 
     return redirect('send_otp')
+
+def view_order_details(request, order_id):
+    order = Order.objects.get(id=order_id, user=request.user)
+    order_items = OrderItem.objects.filter(order_id=order_id)
+
+    context={"order":order, "order_items":order_items}
+    return render(request, 'view_order_details.html',context)
+
