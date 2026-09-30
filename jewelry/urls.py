@@ -52,5 +52,5 @@ urlpatterns = [
     path('reset-password/<uidb64>/<token>/', reset_password, name='reset_password'),
     path('send-otp/', send_otp, name='send_otp'),
     path('verify-otp/', verify_otp, name='verify_otp'),
-    
+    path('view-order-details/<int:order_id>', view_order_details, name="view_order_details")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
