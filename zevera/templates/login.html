@@ -49,7 +49,7 @@
 
 
 
-  
+
  .password-wrapper {
     position: relative;
   }
@@ -103,8 +103,14 @@
           {% if form.username.errors %}<p class="field-error">{{ form.username.errors.0 }}</p>{% endif %}
         </div>
         <div class="field-group">
-          <label class="field-label" for="{{ form.password.id_for_label }}">Password</label>
-          {{ form.password }}
+           <label class="field-label" for="{{ form.password.id_for_label }}">Password</label> 
+          
+             <div class="password-wrapper">
+              {{ form.password }}
+          <!-- <input type="checkbox" id="showPw1" class="toggle-checkbox">
+          <input type="text" id="password1" name="password1" class="field-input masked" required> -->
+          <label for="showPw1" class="toggle-label">SHOW</label>
+        </div>
           {% if form.password.errors %}<p class="field-error">{{ form.password.errors.0 }}</p>{% endif %}
         </div>
         <button type="submit" class="btn-primary">Log In</button>
