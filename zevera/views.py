@@ -212,10 +212,11 @@ def signup_view(request):
 
 def login_view(request):
     if request.method == 'POST':
+        password = request.POST.get('password')
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            # password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
