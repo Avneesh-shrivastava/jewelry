@@ -108,7 +108,7 @@
         <div class="password-wrapper">
               
           <input type="checkbox" id="showPw1" class="toggle-checkbox">
-          <input type="text" id="password1" name="password" class="field-input masked" required>
+          <input type="text" id="password" name="password" class="field-input masked" required>
           <label for="showPw1" class="toggle-label">SHOW</label>
         </div>
           {% if form.password.errors %}<p class="field-error">{{ form.password.errors.0 }}</p>{% endif %}
@@ -122,5 +122,25 @@
 
     <div class="auth-back"><a href="{% url 'home_page' %}">← Back to Shop</a></div>
   </div>
+
+<script>
+    const checkbox = document.getElementById("showPw1");
+    const password = document.getElementById("password");
+    const label = document.getElementById("toggleLabel1");
+
+    checkbox.addEventListener("change", function () {
+        if (this.checked) {
+            password.type = "text";
+            label.textContent = "HIDE";
+        } else {
+            password.type = "password";
+            label.textContent = "SHOW";
+        }
+    });
+</script>
+
+
+
+
 </body>
 </html>
