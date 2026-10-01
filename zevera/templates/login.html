@@ -105,10 +105,10 @@
         <div class="field-group">
            <label class="field-label" for="{{ form.password.id_for_label }}">Password</label> 
           
-             <div class="password-wrapper">
-              {{ form.password }}
-          <!-- <input type="checkbox" id="showPw1" class="toggle-checkbox">
-          <input type="text" id="password1" name="password1" class="field-input masked" required> -->
+          <div class="password-wrapper">
+              
+          <input type="checkbox" id="showPw1" class="toggle-checkbox">
+          <input type="text" id="password1" name="password" class="field-input masked" required>
           <label for="showPw1" class="toggle-label">SHOW</label>
         </div>
           {% if form.password.errors %}<p class="field-error">{{ form.password.errors.0 }}</p>{% endif %}
