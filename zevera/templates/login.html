@@ -46,6 +46,41 @@
   .auth-back { text-align: center; margin-top: 1.25rem; }
   .auth-back a { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
   .auth-back a:hover { color: var(--gold-dark); }
+
+
+
+  
+ .password-wrapper {
+    position: relative;
+  }
+  .password-wrapper input[type="text"].masked {
+    -webkit-text-security: disc;
+    -webkit-text-fill-color: var(--ink, #1a1a1a); /* keep normal text color */
+  }
+  .toggle-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .toggle-label {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft, #4a4a4a);
+    user-select: none;
+  }
+  .toggle-checkbox:checked ~ input.masked {
+    -webkit-text-security: none;
+  }
+
+
+
+
 </style>
 </head>
 <body>
